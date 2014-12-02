@@ -1,0 +1,176 @@
+#!/bin/bash
+
+## \file taskkill
+## \author Florian Beaulieu
+## \brief Task killer for linux
+## \version 1.0
+## \date November 27th 2014
+## \param PATHEXEC Save the path of the script.
+##
+## This script provides you a task manager for linux systems.
+
+## \cond DUMMY
+
+PATHEXEC=`echo $( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )`
+source $PATHEXEC/../../lib/ATB/alxdr-lib
+alxdr_config
+
+## \endcond
+
+## \fn killTop
+## \brief Shows the top 10 cpu processus.
+## \param TOP10 Temporary file which saves the dialog command.
+## \param CHOISES Temporary file which save list of the pid of the process to kill.
+## \param C one of the pid of the process to kill.
+## \return 0 - Normal end.
+killTop()
+{
+	export TEXTDOMAIN=taskkill
+	local TOP10="/tmp/TOP10"`pidof $0`
+	local CHOISES="/tmp/CHOISES"`pidof $0`
+	trap "rm -f $TOP10 $CHOISES" 0 1 2 5 9 15
+
+	i18n_fileout $TOP10 "dialogCMD10"
+
+	ps -eo pid,pcpu,comm --sort=-pcpu | head -n 11 | tail -n 10 | sed -e 's/\([0-9]*\) \([0-9]*\.[0-9]*\) \(.*\)/\1 "\2% \3" off/' | sed -re "s/[ ]*(.*)/\1/g" >> $TOP10
+
+	eval $(cat $TOP10) > $CHOISES
+
+	for C in $(cat $CHOISES); do
+		kill -9 $C
+	done
+
+	clear
+	return 0
+}
+
+## \fn killSearch
+## \brief Shows process that mashe the search.
+## \param SEARCH Temporary file which saves the dialog command.
+## \param CHOISES Temporary file which save list of the pid of the process to kill.
+## \param[in] 1 Process to search
+## \return 0 - Normal end.
+killSearch()
+{
+	export TEXTDOMAIN=taskkill
+	local SEARCH="/tmp/SEARCH"`pidof $0`
+	local CHOISES="/tmp/CHOISES"`pidof $0`
+	trap "rm -f $SEARCH $CHOISES" 0 1 2 5 9 15
+
+	i18n_fileout $SEARCH "dialogCMDSearch"	
+
+	ps -eo pid,pcpu,comm --sort=-pcpu | sed '1d' | grep -E "$1" | sed -e 's/\([0-9]*\) \([0-9]*\.[0-9]*\) \(.*\)/\1 "\2% \3" off/' | sed -re "s/[ ]*(.*)/\1/g" >> $SEARCH
+
+	eval $(cat $SEARCH) > $CHOISES
+
+	for C in $(cat $CHOISES); do
+		kill -9 $C
+	done
+	
+	clear
+	return 0
+}
+
+
+## \fn search
+## \brief Shows the dialog which porpose to search a name of a process.
+## \param CMD Temporary file which saves the dialog command.
+## \param OK Save the return value of "dialog" command.
+## \param SEARCH Process to search.
+## \return 0 - Normal end.
+search()
+{
+	export TEXTDOMAIN=taskkill
+	local CMD="/tmp/CMD"`pidof $0`
+	trap "rm -f $CMD" 0 1 2 5 9 15
+	
+	eval $(i18n_display "search") 2> $CMD
+	local OK="$?"
+	
+	local SEARCH=`cat $CMD`
+
+	case $OK in
+	"0")
+	
+		if ps -eo pid,pcpu,comm --sort=-pcpu | sed '1d' | grep -E "$SEARCH"; then
+			killSearch $SEARCH
+		else
+			clear
+			i18n_error "noProcess"
+			exit 2
+		fi;;
+	"1")
+		clear
+		exit 1;;
+	esac
+}
+
+## \fn menu
+## \brief Shows the dialog menu.
+## \param MENU Temporary file which saves the dialog command.
+## \param CHOISE Save the return value of "dialog" command.
+## \return 0 - Normal end.
+menu()
+{
+	export TEXTDOMAIN=taskkill
+	local MENU="/tmp/MENU"`pidof $0`
+	trap "rm -f $MENU" 0 1 2 5 9 15
+	eval $(i18n_display "menu") 2> $MENU
+
+	local CHOISE=`cat $MENU`
+
+	CHOISE=`echo $CHOISE | awk {'printf $NF'}`
+
+	case $CHOISE in
+	"0")
+		search;;
+	"1")
+		killTop;;
+	*)
+		clear
+		return 0;;
+	esac
+}
+
+
+main()
+{
+OPTS=$( getopt -o t,s -l top,search: -- "$@" )
+if [ $? != 0 ]
+then
+    exit 1
+fi
+
+if [ $# = 0 ]; then
+	menu
+fi
+
+eval set -- "$OPTS"
+
+while true ; do
+    case "$1" in
+        -t) 
+		killTop;
+            	shift;;
+	-s)
+		search
+		shift;;
+         --top) 
+		killTop;
+		shift;;
+         --search) 
+		search;
+		shift;;
+         --) shift; break;;
+    esac
+done
+
+exit 0
+
+}
+
+## \cond DUMMY
+
+main
+
+## \endcond

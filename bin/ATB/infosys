@@ -1,0 +1,57 @@
+#!/bin/bash
+set -x
+# wmctrl -r :ACTIVE: -b add,fullscreen # Full screen
+clear
+
+PATHEXEC=`echo $( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )`
+source $PATHEXEC/../../lib/ATB/alxdr-lib
+
+export TEXTDOMAIN=infosys
+
+IP=$(netstat -ie | grep -v '127.0.0.1' | sed --silent 's/^.*inet adr:\([0-9]*.\)\.\([0-9]*.\)\.\([0-9]*.\)\.\([0-9]*.\).*$/\1.\2.\3.\4/p')
+HOSTNAME=`hostname`;
+UPTIME=`uptime | tr --squeeze-repeats " " | cut --delimiter " " --fields 2`;
+LOAD1=`uptime | tr --squeeze-repeats " " | cut --delimiter " " --fields 9`;
+LOAD2=`uptime | tr --squeeze-repeats " " | cut --delimiter " " --fields 10`;
+LOAD3=`uptime | tr --squeeze-repeats " " | cut --delimiter " " --fields 11`;
+USERS=`who`;
+RAM=`free | grep "Mem" | tr --squeeze-repeats " " | cut --delimiter " " --fields 2`;
+NBPROC=`cat /proc/cpuinfo | grep "physical id" | sort --uniq | wc --lines`;
+CORPERSOCKET=`cat /proc/cpuinfo | grep "siblings" | sort --uniq | cut --delimiter ":" --fields 2`;
+PROCFREQUENCY=`cat /proc/cpuinfo | grep "MHz" | uniq | cut --delimiter " " --fields 3`;
+DISK=`df --human-readable`;
+
+echo -e "\033[31m" # RED color
+echo -e " ***************************"
+i18n_display "globalinfo"
+echo -e " ***************************"
+echo -e "\n";
+echo "Hostname :" $HOSTNAME
+echo "Adresse IP : " $IP
+echo "UpTime : " $UPTIME
+echo "Charge moyenne de la dernière minute :  ${LOAD1%?} /  $(($NBPROC * $CORPERSOCKET)) "
+echo "Charge moyenne des 5 dernières minutes :  ${LOAD2%?} / $(($NBPROC * $CORPERSOCKET)) "
+echo "Charge moyenne des 15 dernières minutes : ${LOAD3%?} / $(($NBPROC * $CORPERSOCKET)) "
+#echo "Utilisateurs connecté : " $USERS
+echo -e "\n"
+echo -e "\033[37m" # GREY color
+echo -e "#############################################################################################"
+echo -e "\033[32m" # GREEN color
+echo -e " ****************"
+echo -e " *** HARDWARE ***"
+echo -e " ****************"
+echo -e "\n";
+echo "Mémoire RAM :  $RAM Ko"
+echo "Nombre Processeur : " $NBPROC
+echo "Nombre de core par socket : " $CORPERSOCKET
+echo "Cadence processeur :  $PROCFREQUENCY Mhz"
+echo -e "\n"
+echo -e "\033[37m" # GREY color
+echo -e "#############################################################################################"
+echo -e "\033[36m" # PURPLE color
+echo -e " *********************"
+echo -e " ***   DISK SPACE  ***"
+echo -e " *********************"
+echo -e "\n";
+df --human-readable
+echo -e "\033[0m" # BLACK color

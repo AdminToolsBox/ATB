@@ -1,0 +1,15 @@
+msgid "dialogCMD10"
+msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Task Manager\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 18 80 10 "
+
+msgid "dialogCMDSearch"
+msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Gestionnaire de tâches\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 30 80 15 "
+
+msgid "search"
+msgstr "dialog --backtitle \"Task Killer\" --title \"Search a process\" --clear --inputbox \"Enter the full or a part of the process' name to kill:\" 8 80"
+
+msgid "noProcess"
+msgstr "No process found!"
+
+msgid "menu"
+msgstr "dialog --clear --backtitle \"Task Killer\" --title \"Menu\"  --menu \"Choose an option:\" 8 80 2 0 \"Search process\" 1 \"Top 10 %cpu\""
+

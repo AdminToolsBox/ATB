@@ -1,0 +1,22 @@
+#!/bin/bash
+# We call the functions library
+source ../../lib/ATB/alxdr
+
+
+# If the server.list file doesn't exist we create it
+checkserverlist
+
+# We get the user's choice from the dialog interface
+VAR=`sed '$ s/.$//' "server.list"`
+# According to the user's choice -->
+choice=`eval $VAR` 
+if [ "$choice" == "Add a server" ]; then
+# We add a server to the list
+addsrv 
+# We remotly connect to the server selected
+else 
+     for C in $choice;
+          do connectsrv $C
+     done
+fi
+     

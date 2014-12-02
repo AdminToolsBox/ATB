@@ -1,0 +1,24 @@
+#hac.bash fr_FR
+msgid "ChooseInterface"
+msgstr "Choisissez une interface à scanner :"
+
+msgid "WrongInterface"
+msgstr "Mauvaise interface!"
+
+msgid "IPAddress"
+msgstr "Adresse IP:\t\t"
+
+msgid "BCASTAddress"
+msgstr "Adresse de difusion:\t"
+
+msgid "Mask"
+msgstr "Masque:\t\t\t"
+
+msgid "NETAddress"
+msgstr "Adresse réseau:\t\t"
+
+msgid "HostsIP"
+msgstr "IP des machines connectées au réseau:"
+
+msgid "Scanning"
+msgstr "Scan en cours..."

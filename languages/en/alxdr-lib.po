@@ -1,0 +1,2 @@
+msgid "notInstalled"
+msgstr " isn't installed. Do you whant to install it? [Y/n]"

@@ -1,0 +1,197 @@
+#!/bin/bash
+
+PATHEXEC=`echo $( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )`
+source $PATHEXEC/../../lib/ATB/i18n-lib
+
+
+alxdr_checkInstalled()
+{
+	export TEXTDOMAIN=alxdr-lib
+	eval $1
+	if [ $? = "127" ]; then
+		clear
+		echo -e "$1\c" 
+		i18n_error "notInstalled"
+		read CHOIX
+		if [ $CHOIX = "y" -o $CHOIX = "Y" -o $CHOIX = "o" -o $CHOIX = "O" ]; then
+			sudo apt-get install $1 -y
+			return $?
+		else
+			return 1
+		fi
+	else
+		return 0
+	fi
+}
+
+
+alxdr_config()
+{
+	OUTPUT=/tmp/config.tempo
+	egrep -v '^(#|$)' $PATHEXEC/../../lib/ATB/ATB.conf > $OUTPUT
+	lang=`grep "lang" $OUTPUT | cut --delimiter "=" --fields 2`
+	dialog=`grep "dialog" $OUTPUT | cut --delimiter "=" --fields 2`
+	export LC_ALL=$lang".UTF-8"
+	if [ $dialog = yes ]; then
+		alxdr_checkInstalled "dialog"
+		OK=$?
+		if [ $OK -ne 0 ]; then
+			return 0	
+		else 	
+			return 1	
+		fi
+	fi
+	rm $OUTPUT
+}
+
+#########################################################
+### THIS FUNCTION ALLOW TO CONNECT TO A REMOTE SERVER ###
+#########################################################
+
+connectsrv()
+{
+	IP=$1
+        clear
+	# We get the IP address and remote the double quote (") at the start and the end of the variable
+     IP=`echo $IP | cut -d '"' -f 2`
+	# We try to connect to the IP; if isn't possible, we display an error message        
+     ping $IP -c 1 #> /dev/null && (echo "Connexion to $IP";exit 0) || ("Impossible to join the remote server !"; exit 1)
+	# If the link works succefully, we ask the admin login of the remote computer
+     if  [ $? -eq '0' ]; then
+     echo "Administrator login :"
+     read LOGIN
+	# We run the script on the remote computer      
+     ssh $LOGIN@$IP bash < ../../bin/ATB/infosys
+     fi
+}
+
+###################################################################
+### THIS FUNCTION ALLOW TO ADD A SERVER TO THE SERVER.LIST FILE ###
+###################################################################
+
+addsrv()
+{
+OUTPUT="/tmp/OUTPUT.txt"
+SRVLIST="../../bin/ATB/server.list"
+
+	# Creation of an empty exit file
+>$OUTPUT
+
+	# If the process is canced for any reason (SIGHUP / SIGINT / SIGTER), we delete the tempory file (cleaning operation)
+trap "rm $OUTPUT; exit" SIGHUP SIGINT SIGTERM
+
+	# Box dialog displaying 
+dialog --title "Add a remote server to the available computer list" \
+--backtitle "Please type a correct IP address (X.X.X.X)" \
+--inputbox "IP address: " 8 60 2>$OUTPUT
+
+	# Get the answer (OK or Cancel)
+answer=$?
+
+	# We get the variable from the tempory file created at the start of the script
+IP=$(<$OUTPUT)
+
+	# According to the user choice (OK / Cancel), we going to the selected case
+case $answer in
+  0)
+         if [ ! -z $IP ];then
+        IPCONCAT="\"$IP\" \"\" off"
+        echo $IPCONCAT>>$SRVLIST
+        dialog --title "Added succesfully !" --clear --msgbox "The server $IP has been added succesfully!" 10 41
+                    else
+        dialog --title "Error" --clear --msgbox "You should type an IP address ! " 10 41
+        fi
+	clear
+
+        ;;
+  1)
+        echo "Server addition canceled." 
+        ;;
+  255)
+   echo "Server addition canceled"
+esac
+
+	# Tempory file removed
+rm $OUTPUT
+
+}
+
+checkserverlist()
+{
+if [ ! -f "server.list" ]; then # If the file server.list doesn't exist, we create it with the necessary data inside
+echo "/usr/bin/dialog --stdout --backtitle \"Liste des Serveurs\" --title \"Selectionner un serveur sur lequel executer votre script\" --radiolist \"Si votre machine distant n'est pas présente ajouté là !\" 30 80 15" > server.list
+echo "\"Add a server\"" "\"\"" "on" >> server.list
+fi
+}
+
+config()
+{
+OUTPUT=/tmp/config.tempo
+egrep -v '^(#|$)' ATB.conf > $OUTPUT
+lang=`grep "lang" $OUTPUT | cut --delimiter "=" --fields 2`
+gui=`grep "gui" $OUTPUT | cut --delimiter "=" --fields 2`
+#export LC_ALL=$lang".UTF-8"
+#if [ $dialog = yes ]; then
+#	{
+#	if [ checkinstall "dialog" -ne 0 ]; then
+#		{
+#		echo "KO"
+#		}
+#	else 
+#		{
+#		echo "OK"
+#		}
+#	fi
+#	}
+#fi
+rm $OUTPUT
+}
+
+#######################################################################
+### THIS FUNCTION ALLOW TO REWRITE THE ATB.CONF FILE (USER SETTINGS ###
+#######################################################################
+
+reconfig()
+{
+clear
+loop=true
+while [ $loop == true ]
+do
+read -p "Please choose your language [fr | en] : " lang
+	case $lang in
+	fr ) echo "Français selectionné";;
+	en ) echo "English selected";;
+	* ) echo "Error, please choose fr or en";;
+	esac
+if [ $lang == "fr" -o $lang == "en" ]; then
+loop=false
+fi
+done
+
+loop=true
+while [ $loop == true ]
+do
+
+read -p "Would you use a dialog interface ? (dialog packet required) [yes | no] " gui
+	case $gui in
+	y* ) echo "GUI Enable";;
+	n* ) echo "GUI Disable";;
+	* ) echo "Error, plese choose yes or no";;
+	esac
+
+if [ $gui == y -o $gui == n -o $gui == yes -o $gui == no ]; then
+loop=false
+fi
+done
+
+	# We format the user's answer to the ATB.conf file 
+if [ $lang == fr ]; then lang=fr_FR; fi
+if [ $lang == en ]; then lang=en_US; fi
+if [ $gui == y ]; then gui=yes; fi
+if [ $gui == n ]; then gui=no; fi
+
+# Ajouter les variable dans le fichier ATB.conf (avec sed)
+sed -i -e "s/lang.*/lang=$lang/g" $PATHEXEC/../../lib/ATB/ATB.conf
+sed -i -e "s/gui.*/gui=$gui/g" $PATHEXEC/../../lib/ATB/ATB.conf
+
+}
