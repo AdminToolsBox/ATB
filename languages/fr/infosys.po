@@ -1,2 +1,48 @@
 msgid "globalinfo"
-msgstr " *** INFORMATIONS GLOBALES ***"
+msgstr "\
+ ***************************\n\
+ ** INFORMATIONS GLOBALES **\n\
+ ***************************"
+
+msgid "hardware"
+msgstr "\
+ **************\n\
+ ** MATERIEL **\n\
+ **************"
+
+msgid "disk"
+msgstr "\
+ *******************\n\
+ ** ESPACE DISQUE **\n\
+ *******************"
+
+msgid "hostname"
+msgstr "Nom de la machine :\t\t\t\t"
+
+msgid "ip"
+msgstr "Adresse IP :\t\t\t\t\t"
+
+msgid "uptime"
+msgstr "Temps de fonctionnement :\t\t\t"
+
+msgid "last1charge"
+msgstr "Charge moyenne de la dernière minute :\t\t"
+
+msgid "last5charge"
+msgstr "Charge moyenne des 5 dernières minutes :\t"
+
+msgid "last15charge"
+msgstr "Charge moyenne des 15 dernières minutes :\t"
+
+msgid "ram"
+msgstr "Quantité de RAM installée :\t\t\t"
+
+msgid "nbcpu"
+msgstr "Nombre de CPU :\t\t\t\t\t"
+
+msgid "nbcore"
+msgstr "Nombre de core par socket :\t\t\t"
+
+msgid "freq"
+msgstr "Fréquence du processeur :\t\t\t"
+

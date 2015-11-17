@@ -1,2 +1,2 @@
 msgid "notInstalled"
-msgstr " n'est pas installé. Voulez vous l'insrtaller? [O/n]"
+msgstr " n'est pas installé. Voulez vous l'installer? [O/n]"

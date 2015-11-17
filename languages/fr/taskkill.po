@@ -1,15 +1,31 @@
+msgid "help"
+msgstr "Taskkill est un gestionnaire de tâches simplifié.\n\
+	SYNTAXE:\n\
+	\tatb taskkill [Options]\n\
+	OPTIONS:\n\
+	\t-s,--search\tRecherche d'un processus par son nom.\n\
+	\t-t,--top\tAffiche les 10 processus les plus consommateurs en resources CPU.\n\
+	\t-h,--help\tAffiche cette aide.\n\
+	NOTES:\n\
+	\tLes options -s et -t ne sont pas compatibles. Veillez choisir l'une ou l'autre.\n\
+	\tSans option, taskkill affichera un menu contenant les différentes possibilités."
+
+msgid "syntaxError"
+msgstr "Mauvaise syntaxe!\n\
+	Veuillez taper 'atb alive --help' pour plus d'informations."
+
 msgid "dialogCMD10"
-msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Gestionnaire de tâches\" --checklist \"Choisissez les programmes à tuer: pid, %age cpu, commande:\" 18 80 10 "
+msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Gestionnaire de tâches\" --checklist \"Choisissez les programmes à tuer: pid, %age cpu, commande:\" 20 80 12 "
 
 msgid "dialogCMDSearch"
 msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Gestionnaire de tâches\" --checklist \"Choisissez les programmes à tuer: pid, %age cpu, commande:\" 30 80 15 "
 
 msgid "search"
-msgstr "dialog --backtitle \"Task Killer\" --title \"Rechercher un processus\" --clear --inputbox \"Entrez le nom ou une partie du mon du processus à tuer:\" 8 80 "
+msgstr "dialog --backtitle \"Task Killer\" --title \"Rechercher un processus\" --clear --inputbox \"Entrez le nom ou une partie du nom du processus à tuer:\" 8 80 "
 
 msgid "noProcess"
 msgstr "Aucun processus trouvé!"
 
 msgid "menu"
-msgstr "dialog --clear --backtitle \"Task Killer\" --title \"Menu\"  --menu \"Choississez une option:\" 8 80 2 0 \"Rechercher un processus\" 1 \"Top 10 %cpu\""
+msgstr "dialog --clear --backtitle \"Task Killer\" --title \"Menu\"  --menu \"Choississez une option:\" 10 80 4 0 \"Rechercher un processus\" 1 \"Top 10 %cpu\""
 

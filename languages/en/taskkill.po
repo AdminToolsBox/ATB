@@ -1,8 +1,25 @@
+msgid "help"
+msgstr "Taskkill is a simplified task manager.\n\
+	SYNTAXE:\n\
+	\tatb taskkill [Options]\n\
+	OPTIONS:\n\
+	\t-s,--search\tSearch a process by its name.\n\
+	\t-t,--top\tShows the 10 most consuming processes.\n\
+	\t-h,--help\tShows this help page.\n\
+	NOTES:\n\
+	\t-s and -t parameters aren't compatible. Please choose only one of them.\n\
+	\tWithout any option, taskkill will show you a menu."
+
+
+msgid "syntaxError"
+msgstr "Bad syntax!\n\
+	Please run 'atb alive --help' for further information."
+
 msgid "dialogCMD10"
-msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Task Manager\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 18 80 10 "
+msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Task Manager\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 20 80 12 "
 
 msgid "dialogCMDSearch"
-msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Gestionnaire de tâches\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 30 80 15 "
+msgstr "/usr/bin/dialog --stdout --backtitle \"Task Killer\" --title \"Task Manager\" --checklist \"Choose process to kill: pid, %age cpu, command:\" 30 80 15 "
 
 msgid "search"
 msgstr "dialog --backtitle \"Task Killer\" --title \"Search a process\" --clear --inputbox \"Enter the full or a part of the process' name to kill:\" 8 80"
@@ -11,5 +28,5 @@ msgid "noProcess"
 msgstr "No process found!"
 
 msgid "menu"
-msgstr "dialog --clear --backtitle \"Task Killer\" --title \"Menu\"  --menu \"Choose an option:\" 8 80 2 0 \"Search process\" 1 \"Top 10 %cpu\""
+msgstr "dialog --clear --backtitle \"Task Killer\" --title \"Menu\"  --menu \"Choose an option:\" 10 80 4 0 \"Search process\" 1 \"Top 10 %cpu\""
 
