@@ -1,26 +1,31 @@
 #!/bin/bash
 
-PATHEXEC=`echo $( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )`
-export TEXTDOMAINDIR=$PATHEXEC/../../locale/ATB
-
+## \file i18n-lib
+## \author Louis Iacona
+## \brief Library for internationalization
+## \date September 27th 2010
 ##
-# Thin library around basic I18N facilitated function
-#   basic text display, file logging, error display, and prompting
+##  Thin library around basic I18N facilitated function basic text display, file logging, error display, and prompting.\n
+## Soucres : http://www.linuxjournal.com/content/internationalizing-those-bash-scripts
 
-###############################################
-##
-## Display some text to stderr
-## $1 is assumed to be the Message Catalog key
+## \cond DUMMY
+
+export TEXTDOMAINDIR=/usr/locale/ATB
+
+## \endcond
+
+## \fn i18n_error 
+## \brief Display some text to stderr.
+## \param[in] 1 The Message Catalog key
 i18n_error()
 {
         echo "$(gettext -s "$1")" >&2
 }
 
-###############################################
-##
-## Display some text to sdtout
-## $1 is assumed to be the Message Catalog key
-## rest of args are used as misc information
+## \fn i18n_display
+## \brief Display some text to sdtout.
+## \param[in] 1 The Message Catalog key.
+## \param[in] @ Misc information.
 i18n_display()
 {
         typeset key="$1"
@@ -28,11 +33,11 @@ i18n_display()
         echo "$(gettext -s "$key") $@"
 }
 
-###############################################
-## Append a log message to a file.
-## use $1 as target file to append to
-## use $2 as catalog key
-## rest of args are used as misc information
+## \fn i18n_fileout
+## \brief Append a log message to a file..
+## \param[in] 1 Target file to append to.
+## \param[in] 2 The Message Catalog key.
+## \param[in] @ Misc information.
 i18n_fileout()
 {
         [[ $# -lt 2 ]] && return 1
@@ -42,8 +47,11 @@ i18n_fileout()
         echo "$(gettext -s "$key") $@" >> ${file}
 }
 
-## Prompt the user with a message and echo back the response.
-## $1 is assumed to be the Message Catalog key
+
+## \fn i18n_prompt
+## \brief Prompt the user with a message and echo back the response.
+## \param[in] 1 The Message Catalog key.
+## \param[out] rv The response.
 i18n_prompt()
 {
         typeset rv

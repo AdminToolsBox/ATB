@@ -3,31 +3,38 @@
 ## \file taskkill
 ## \author Florian Beaulieu
 ## \brief Task killer for linux
-## \version 1.0
+## \version 1.1.1
 ## \date November 27th 2014
-## \param PATHEXEC Save the path of the script.
 ##
 ## This script provides you a task manager for linux systems.
 
-## \cond DUMMY
+## \fn taskkill_help
+## \brief Shows the help page of this script.
+taskkill_help()
+{
+	i18n_display "help"
+	exit 0
+}
 
-PATHEXEC=`echo $( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )`
-source $PATHEXEC/../../lib/ATB/alxdr-lib
-alxdr_config
+## \fn taskkill_syntaxError
+## \brief Shows the error message after a wrong syntax call.
+taskkill_syntaxError()
+{
+	i18n_error "syntaxError"
+	exit 1
+}
 
-## \endcond
 
-## \fn killTop
+## \fn taskkill_killTop
 ## \brief Shows the top 10 cpu processus.
 ## \param TOP10 Temporary file which saves the dialog command.
 ## \param CHOISES Temporary file which save list of the pid of the process to kill.
 ## \param C one of the pid of the process to kill.
 ## \return 0 - Normal end.
-killTop()
+taskkill_killTop()
 {
-	export TEXTDOMAIN=taskkill
-	local TOP10="/tmp/TOP10"`pidof $0`
-	local CHOISES="/tmp/CHOISES"`pidof $0`
+	local TOP10=`mktemp`
+	local CHOISES=`mktemp`
 	trap "rm -f $TOP10 $CHOISES" 0 1 2 5 9 15
 
 	i18n_fileout $TOP10 "dialogCMD10"
@@ -44,17 +51,16 @@ killTop()
 	return 0
 }
 
-## \fn killSearch
+## \fn taskkill_killSearch
 ## \brief Shows process that mashe the search.
 ## \param SEARCH Temporary file which saves the dialog command.
 ## \param CHOISES Temporary file which save list of the pid of the process to kill.
 ## \param[in] 1 Process to search
 ## \return 0 - Normal end.
-killSearch()
+taskkill_killSearch()
 {
-	export TEXTDOMAIN=taskkill
-	local SEARCH="/tmp/SEARCH"`pidof $0`
-	local CHOISES="/tmp/CHOISES"`pidof $0`
+	local SEARCH=`mktemp`
+	local CHOISES=`mktemp`
 	trap "rm -f $SEARCH $CHOISES" 0 1 2 5 9 15
 
 	i18n_fileout $SEARCH "dialogCMDSearch"	
@@ -72,16 +78,15 @@ killSearch()
 }
 
 
-## \fn search
+## \fn taskkill_search
 ## \brief Shows the dialog which porpose to search a name of a process.
 ## \param CMD Temporary file which saves the dialog command.
 ## \param OK Save the return value of "dialog" command.
 ## \param SEARCH Process to search.
 ## \return 0 - Normal end.
-search()
+taskkill_search()
 {
-	export TEXTDOMAIN=taskkill
-	local CMD="/tmp/CMD"`pidof $0`
+	local CMD=`mktemp`
 	trap "rm -f $CMD" 0 1 2 5 9 15
 	
 	eval $(i18n_display "search") 2> $CMD
@@ -93,7 +98,7 @@ search()
 	"0")
 	
 		if ps -eo pid,pcpu,comm --sort=-pcpu | sed '1d' | grep -E "$SEARCH"; then
-			killSearch $SEARCH
+			taskkill_killSearch $SEARCH
 		else
 			clear
 			i18n_error "noProcess"
@@ -105,15 +110,14 @@ search()
 	esac
 }
 
-## \fn menu
+## \fn taskkill_menu
 ## \brief Shows the dialog menu.
 ## \param MENU Temporary file which saves the dialog command.
 ## \param CHOISE Save the return value of "dialog" command.
 ## \return 0 - Normal end.
-menu()
+taskkill_menu()
 {
-	export TEXTDOMAIN=taskkill
-	local MENU="/tmp/MENU"`pidof $0`
+	local MENU=`mktemp`
 	trap "rm -f $MENU" 0 1 2 5 9 15
 	eval $(i18n_display "menu") 2> $MENU
 
@@ -123,54 +127,63 @@ menu()
 
 	case $CHOISE in
 	"0")
-		search;;
+		taskkill_search;;
 	"1")
-		killTop;;
+		taskkill_killTop;;
 	*)
 		clear
 		return 0;;
 	esac
 }
 
-
-main()
+## \fn taskkill_main
+## \brief Verify the arguments end call apropriate fontions.
+## \param[in] * List of all the arguments passsed to the script.
+## \return 0 - Normal end.
+taskkill_main()
 {
-OPTS=$( getopt -o t,s -l top,search: -- "$@" )
-if [ $? != 0 ]
-then
-    exit 1
-fi
 
-if [ $# = 0 ]; then
-	menu
-fi
+	if [ $# = 0 ]; then
+		taskkill_menu
+		return 0
+	fi
 
-eval set -- "$OPTS"
+	local top=0
+	local search=0
 
-while true ; do
-    case "$1" in
-        -t) 
-		killTop;
-            	shift;;
-	-s)
-		search
-		shift;;
-         --top) 
-		killTop;
-		shift;;
-         --search) 
-		search;
-		shift;;
-         --) shift; break;;
-    esac
-done
+	while [ $# -ne 0 ]; do
+		if [ "$1" = "--top" ] || [ "$1" = "-t" ]; then
+			top=1
+		elif [ "$1" = "--search" ] || [ "$1" = "-s" ]; then
+			search=1
+		elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+			taskkill_help
+		else
+			taskkill_syntaxError
+		fi
+		shift
+	done
 
-exit 0
+	if [ $top -eq 1 ] && [ $search -eq 0 ]; then
+		taskkill_killTop
+	elif [ $top -eq 0 ] && [ $search -eq 1 ]; then
+		taskkill_search
+	else
+		taskkill_syntaxError
+	fi
 
+	return 0
 }
 
 ## \cond DUMMY
 
-main
+source /usr/lib/ATB/alxdr-lib
+
+if alxdr_checkInstalled "dialog"; then
+	export TEXTDOMAIN=taskkill
+	clear
+	taskkill_main $*
+	exit 0
+fi
 
 ## \endcond
