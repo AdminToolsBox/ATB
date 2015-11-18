@@ -1,0 +1,14 @@
+msgid "syntaxError"
+msgstr "Bad syntax!\n\
+	Please do atb --help for further information."
+
+msgid "help"
+msgstr "ATB (Admin Tools Box) ATB is an utility which allow to run complex command or action very easily.\n\
+	SYNTAX:\n\
+	\tatb [Parametres]\n\
+	PARAMETRES:"
+
+msgid "notes"
+msgstr"\t\t-h,--help\tShows this help page.\n\
+	NOTES:\n\
+	\tFor more information for each parametre, please run 'atb [Parametre] --help' for exemple : 'atb alive --help'"

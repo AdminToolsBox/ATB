@@ -1,0 +1,48 @@
+msgid "globalinfo"
+msgstr "\
+ ************************\n\
+ ** GLOBAL INFORMATION **\n\
+ ************************"
+
+msgid "hardware"
+msgstr "\
+ **************\n\
+ ** HARDWARE **\n\
+ **************"
+
+msgid "disk"
+msgstr "\
+ ****************\n\
+ ** DISK SPACE **\n\
+ ****************"
+
+msgid "hostname"
+msgstr "Hostname :\t\t\t\t"
+
+msgid "ip"
+msgstr "IP address :\t\t\t\t"
+
+msgid "uptime"
+msgstr "Uptime :\t\t\t\t"
+
+msgid "last1charge"
+msgstr "Last minute average charge :\t\t"
+
+msgid "last5charge"
+msgstr "Last 5 minutes average charge :\t\t"
+
+msgid "last15charge"
+msgstr "Last 15 minutes average charge :\t"
+
+msgid "ram"
+msgstr "RAM quantity installed :\t\t"
+
+msgid "nbcpu"
+msgstr "Numbre of CPU :\t\t\t\t"
+
+msgid "nbcore"
+msgstr "Numbre of core by soket :\t\t"
+
+msgid "freq"
+msgstr "CPS's frequency :\t\t\t"
+

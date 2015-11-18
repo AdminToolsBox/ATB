@@ -1,0 +1,15 @@
+msgid "syntaxError"
+msgstr "Mauvaise syntaxe!\n\
+	Veuillez taper atb --help pour plus d'informations."
+
+msgid "help"
+msgstr "ATB (Admin Tools Box) est un utilitaire permettant d'effectuer des commandes complexes facilement.\n\
+	SYNTAXE:\n\
+	\tatb [Paramètres]\n\
+	PARAMETRES:"
+
+msgid "notes"
+msgstr"\t\t-h,--help\tAffiche cette aide.\n\
+	NOTES:\n\
+	\tPour avoir plus d'informations sur chaque paramètre, veuillez taper 'atb [Paramètre] --help' par exemple : 'atb alive --help'"
+

@@ -1,0 +1,210 @@
+#!/bin/bash
+
+## \file alive
+## \author Florian Beaulieu
+## \brief Host alive scanner
+## \version 1.1.1
+## \date November 27th 2014
+## 
+## This script scans your netowork to find hosts alive on it.
+## \param help 	Equals 1 if --help is passed in argument.
+## \param range Equals 1 if --range is passed in argument.
+## \param network Equals 1 if --network is passed in argument.
+## \param netAddress Stocks the network address if $netorwk=1
+## \param ipStart Stocks the first IP of the range if $range=1
+## \param ipEnd Stocks the last IP of the range if $range=1
+
+## \fn alive_help
+## \brief Shows the help page of this script.
+alive_help()
+{
+
+	clear
+	i18n_display "help"
+	exit 0
+
+}
+
+## \fn alive_syntaxError
+## \brief Shows the error message after a wrong syntax call.
+alive_syntaxError()
+{
+
+	clear
+	i18n_error "syntaxError"
+	exit 1
+
+}
+
+## \fn alive_formatTest
+## \brief Test, with a regular expression, if the parameter "$1" is an IP address.
+## \param[in] 1 The IP address passed in argument.
+## \param regex Stocks the regular expression.
+## \return 0 - Good syntax. 
+## \return 1 - Wrong syntax.
+alive_formatTest()
+{
+	local regex=""
+	if [ $range -eq 1 ]; then
+		regex="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+	else
+		regex="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(3[0-2]|[0-2][0-9]|[0-9])$"
+	fi
+	
+	if echo $1 | egrep $regex > /dev/null; then
+		return 0
+	else
+		i18n_error "badIP" "$1"
+		return 1
+	fi
+
+}
+
+## \fn alive_ipars
+## \brief IP Alive Range Scanner. Scans between two IP addresses.
+## \param templist Temporary file which saves the list of alive hosts' IP addresses.
+## \param DbX The first IP address range's Xth byte.
+## \param FbX The last IP address range's Xth byte.
+## \return 0 - Normal end.
+## \return 1 - Error.
+alive_ipars()
+{
+	clear
+
+	local templist=`mktemp`
+	trap `rm $templist` 0 1 2 5 9 15
+
+	if alive_formatTest $ipStart && alive_formatTest $ipEnd; then
+
+		local Db1=`echo $ipStart | cut -d "." -f 1`
+		local Db2=`echo $ipStart | cut -d "." -f 2`
+		local Db3=`echo $ipStart | cut -d "." -f 3`
+		local Db4=`echo $ipStart | cut -d "." -f 4`
+
+		local Fb1=`echo $ipEnd | cut -d "." -f 1`
+		local Fb2=`echo $ipEnd | cut -d "." -f 2`
+		local Fb3=`echo $ipEnd | cut -d "." -f 3`
+		local Fb4=`echo $ipEnd | cut -d "." -f 4`
+
+		while [ $Db1 -le $Fb1 ] && [ $Db2 -le $Fb2 ] && [ $Db3 -le $Fb3 ] && [ $Db4 -le $Fb4 ]; do
+			clear
+			i18n_display "Scanning" "$Db1.$Db2.$Db3.$Db4"				
+			#if nmap -n -sP --max-retries=1 --max-rtt-timeout="1" "$Db1.$Db2.$Db3.$Db4" | grep "Nmap scan" > "/dev/null"; then
+			if ping -c 1 -w 1 "$Db1.$Db2.$Db3.$Db4" > "/dev/null"; then
+				echo "$Db1.$Db2.$Db3.$Db4" >> $templist
+			fi
+ 			Db4=$(( $Db4 + 1 ))
+			if [ $Db4 -eq 256 ]; then
+				Db4=0
+				Db3=$(( $Db3 + 1 ))
+				if [ $Db3 -eq 256 ]; then
+					Db3=0
+					Db2=$(( $Db2 + 1 ))
+					if [ $Db2 -eq 256 ]; then
+						Db2=0
+						Db1=$(( $Db1 + 1 ))
+					fi
+				fi
+			fi
+		done	
+	
+	else
+		exit 1
+	fi
+
+	clear
+	i18n_display "up"
+	cat $templist
+	
+	return 0
+	
+}
+
+## \fn alive_network
+## \brief Scans an entire network.
+## \param templist Temporary file which save the list of alive hosts' IP addresses.
+## \return 0 - Normal end.
+## \return 1 - Error.
+alive_network()
+{
+	local templist=`mktemp`
+	trap `rm $templist` 0 1 2 5 9 15
+
+	if alive_formatTest $netAddress; then
+		i18n_display "Scanning"
+		nmap -n -sP --min-rtt-timeout=1 $netAddress | grep "Nmap scan" | cut -d " " -f 5 > $templist
+	else
+		exit 1
+	fi
+
+	clear
+	i18n_display "up"
+	cat $templist
+	
+	return 0
+
+}
+
+## \fn alive_main
+## \brief Verify the arguments end call apropriate fontions.
+## \param[in] * List of all the arguments passsed to the script.
+## \return 0 - Normal end.
+## \return 1 - Error.
+alive_main()
+{
+
+	clear
+	
+	while [ $# -ne 0 ]; do
+		if [ "$1" == "-r" ] || [ "$1" == "--range" ]; then
+			range=1
+			ipStart=$2
+			ipEnd=$3
+			if ! shift 3; then
+				alive_syntaxError
+			fi
+		elif [ "$1" == "-n" ] || [ "$1" == "--network" ]; then
+			network=1
+			netAddress=$2
+			if ! shift 2; then
+				alive_syntaxError
+			fi
+		elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+			alive_help
+		else
+			alive_syntaxError
+		fi
+	done
+
+	if [ $range -eq 1 ] && [ $network -eq 0 ]; then
+		alive_ipars
+	elif [ $range -eq 0 ] && [ $network -eq 1 ]; then
+		alive_network
+	else
+		alive_syntaxError
+	fi
+
+	return 0
+
+}
+
+## \cond DUMMY
+
+source /usr/lib/ATB/alxdr-lib
+
+help=0
+range=0
+network=0
+netAddress=""
+ipStart=""
+ipEnd=""
+
+if alxdr_checkInstalled nmap; then
+	export TEXTDOMAIN=alive
+	alive_main $*
+	exit 0
+else
+	exit 1
+fi
+
+## \endcond

@@ -1,0 +1,29 @@
+msgid "help"
+msgstr "Alive is an IP address range scanner.\n\
+	SYNTAX:\n\
+	\talive [Parameters]\n\
+	PARAMETERS:\n\
+	\t-r,--range [IPStart] [IPEnd]\tScan hosts alive in the specified range.\n\
+	\t-n, --network [IP/CIDR]\t\t\tScan hosts alive in the specified network.\n\
+	\t-h,--help\t\t\t\tShows this help page.\n\
+	NOTES:\n\
+	\t-r and -n parameters aren't compatible. Please choose only one of them."
+
+msgid "syntaxError"
+msgstr "Bad syntax!\n\
+	Please run 'atb alive --help' for further information."
+
+msgid "badIP"
+msgstr "The format of the IP address is incorrect :"
+
+msgid "areYouSure"
+msgstr "Are you sure you whant to scan this range :"
+
+msgid "yesNo"
+msgstr "[Y/n]?"
+
+msgid "Scanning"
+msgstr "Scan in process"
+
+msgid "up"
+msgstr "List of hosts up: "

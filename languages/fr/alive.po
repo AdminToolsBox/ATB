@@ -1,0 +1,29 @@
+msgid "help"
+msgstr "Alive est un scanner de plage IP.\n\
+	SYNTAXE:\n\
+	\talive [Paramètres]\n\
+	PARAMETRES:\n\
+	\t-r,--range [IPdeDébut] [IPdeFin]\tScanne les machines à l'interieur de la plage sécifiée.\n\
+	\t-n,--network [IP/CIDR]\t\t\tScanne les machines à l'interieur du réseau spécifié.\n\
+	\t-h,--help\t\t\t\tAffiche cette aide.\n\
+	NOTES:\n\
+	\tLes paramètres -r et -n ne sont pas compatibles. Veillez choisir l'une ou l'autre."
+
+msgid "syntaxError"
+msgstr "Mauvaise syntaxe!\n\
+	Veuillez taper 'atb alive --help' pour plus d'informations."
+
+msgid "badIP"
+msgstr "Le format de l'adresse IP entrée est incorrect :"
+
+msgid "areYouSure"
+msgstr "Etes vous sûr de vouloir scanner cette plage :"
+
+msgid "yesNo"
+msgstr "[O/n]?"
+
+msgid "Scanning"
+msgstr "Scan en cours..."
+
+msgid "up"
+msgstr "Liste des machines connectées :"

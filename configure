@@ -1,0 +1,171 @@
+#!/bin/bash
+
+## \file configure
+## \author Florian Beaulieu
+## \brief Configure the project before installation.
+## \version 1.1.1
+## \date December 22th 2014
+
+## \fn configure_help
+## \brief Shows the help page of this script.
+configure_help()
+{
+	echo -e "Configure prepares the ATB project in order to install it.\n\
+	\tSYNTAX:\n\
+	\t\t./configure [OPTIONS]\n\
+	\tOPTIONS:\n\
+	\t\t-f,--force\tRun the configuration without cheking dependencies. /!\\ Use it at your own risk!\n\
+	\t\t-h,--help\tShows this help page."	
+}
+
+## \fn configure_syntaxError
+## \brief Shows the error message after a wrong syntax call.
+configure_syntaxError()
+{
+	echo -e "Bad syntax!\n\
+	\tPlease run \"./configure --help\" for more information."
+}
+
+## \fn configure_dependencies
+## \brief Check if the programm "$1" is installed.
+## \param[in] 1 Name of the programm.
+## \return 0 - The programm is installed.
+## \return 1 - The programm isn't installed.
+configure_dependencies()
+{
+	$1 > /dev/null 2>&1
+	if [ $? -eq 127 ]; then
+		echo "$1 isn't installed yet. ATB needs him to run correctly. Please install it by running \"sudo apt-get install $1" >&2
+		echo "To ignore this massage, run \"./configure --force\" at your own risk."
+		return 1
+	else
+		return 0
+	fi
+}
+
+## \fn configure_writeMake
+## \brief Writes the Makefile.
+## \return 0 - Normal end.
+configure_writeMake()
+{
+## \cond DUMMY
+	cat << 'FDF' > ./Makefile
+all::
+
+
+all:: help
+
+help:
+	clear
+	echo "Run 'sudo make install' to install Admin Tools Box (ATB) under /usr/bin."
+	echo "Run 'sudo make uninstall' to uninstall Admin Tools Box (ATB)."
+	echo "Run 'make doc' to build the documentation (require the package doxygen)."
+	echo "Run 'make rebuilddoc' to rebuild the documentation."
+	echo "Run 'make rmdoc' to remove the documentation."
+
+install:
+	cp -p -r -f ./bin/* /usr/bin
+	cp -p -r -f ./lib/* /usr/lib
+	cp -p -r -f ./locale /usr/locale
+	echo "Run 'atb --help'"
+
+unistall:
+	rm -r -f /usr/bin/ATB
+	rm -f /usr/bin/atb
+	rm -r -f /usr/lib/ATB
+	rm -r -f /usr/locale
+	rm -r -f ./locale
+	rm -r -f ./doc
+	rm -f ./Makefile
+
+doc:
+	mkdir -p ./doc
+	doxygen > "/dev/null" 2>&1
+
+rmdoc:
+	rm -r -f ./doc
+
+rebuilddoc: rmdoc doc
+
+.SILENT: help doc rmdoc rebuilddoc install
+
+FDF
+
+return 0
+## \endcond
+}
+
+## \fn configure_permitions
+## \brief Changes the scripts' permitions.
+## \return 0 - Normal end.
+configure_permitions()
+{
+	for file in `ls --almost-all ./bin/ATB`; do
+		chmod 754 "./bin/ATB/$file"
+	done
+
+	for file in `ls --almost-all ./lib/ATB`; do
+		chmod 754 "./lib/ATB/$file"
+	done
+	
+	return 0
+}
+
+## \fn configure_languages
+## \brief Creates the internationalization's files.
+## \return 0 - Normal end.
+configure_languages()
+{
+	for file in `ls --almost-all ./languages/fr`; do
+		trad=`echo $file | sed -re 's/^(.*)\.po$/\1\.mo/g'`
+		for dir in `ls --almost-all ./languages`; do
+			mkdir -p "./locale/ATB/$dir/LC_MESSAGES"
+			msgfmt -o "./locale/ATB/$dir/LC_MESSAGES/$trad" "./languages/$dir/$file"
+		done
+	done
+	
+	return 0
+}
+
+## \fn configure_config
+## \brief Call the fonctions of configuration.
+## \return 0 - Normal end.
+configure_config()
+{
+	configure_permitions
+	configure_languages
+	configure_writeMake
+	echo "Configuration complete! Run 'make install'"
+	return 0
+}
+
+## \fn configure_main
+## \brief Verify the arguments end run apropriate fonctions
+## \param[in] * List of all the arguments passsed to the script.
+## \return 0 - Normal end.
+## \return 1 - Error.
+configure_main()
+{
+	if [ $# -eq 0 ]; then
+		if configure_dependencies "nmap" && configure_dependencies "dialog" && configure_dependencies "gettext"; then
+			configure_config
+		else
+			exit 1
+		fi
+	elif [ "$1" = "--force" ] || [ "$1" = "-f" ]; then
+		configure_config
+	elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+		configure_help
+	else
+		configure_syntaxError
+	fi
+	
+	return 0
+}
+
+## \cond DUMMY
+
+clear
+configure_main $*
+
+## \endcond
