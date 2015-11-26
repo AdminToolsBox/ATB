@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ## \file configure
-## \author Florian Beaulieu
+## \author Florian Beaulieu & William Misson
 ## \brief Configure the project before installation.
-## \version 1.1.1
-## \date December 22th 2014
+## \version 1.1.2
+## \date November 26th 2015
 
 ## \fn configure_help
 ## \brief Shows the help page of this script.
@@ -31,11 +31,28 @@ configure_syntaxError()
 ## \param[in] 1 Name of the programm.
 ## \return 0 - The programm is installed.
 ## \return 1 - The programm isn't installed.
+
+
+
+
 configure_dependencies()
 {
+	version=$(grep "^NAME=" /etc/os-release | cut -d \" -f 2 | tr A-Z a-z)
+	case "$version" in  
+
+		fedora*)
+		install="yum install"
+		;;
+
+		*)
+		install="apt-get install"
+		;;
+
+	esac
+
 	$1 > /dev/null 2>&1
 	if [ $? -eq 127 ]; then
-		echo "$1 isn't installed yet. ATB needs him to run correctly. Please install it by running \"sudo apt-get install $1" >&2
+		echo "$1 isn't installed yet. ATB needs him to run correctly. Please install it by running \"sudo $install $1" >&2
 		echo "To ignore this massage, run \"./configure --force\" at your own risk."
 		return 1
 	else
