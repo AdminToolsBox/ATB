@@ -1,0 +1,189 @@
+#!/bin/bash
+
+## \file taskkill
+## \author Florian Beaulieu
+## \brief Task killer for linux
+## \version 1.1.1
+## \date November 27th 2014
+##
+## This script provides you a task manager for linux systems.
+
+## \fn taskkill_help
+## \brief Shows the help page of this script.
+taskkill_help()
+{
+	i18n_display "help"
+	exit 0
+}
+
+## \fn taskkill_syntaxError
+## \brief Shows the error message after a wrong syntax call.
+taskkill_syntaxError()
+{
+	i18n_error "syntaxError"
+	exit 1
+}
+
+
+## \fn taskkill_killTop
+## \brief Shows the top 10 cpu processus.
+## \param TOP10 Temporary file which saves the dialog command.
+## \param CHOISES Temporary file which save list of the pid of the process to kill.
+## \param C one of the pid of the process to kill.
+## \return 0 - Normal end.
+taskkill_killTop()
+{
+	local TOP10=`mktemp`
+	local CHOISES=`mktemp`
+	trap "rm -f $TOP10 $CHOISES" 0 1 2 5 9 15
+
+	i18n_fileout $TOP10 "dialogCMD10"
+
+	ps -eo pid,pcpu,comm --sort=-pcpu | head -n 11 | tail -n 10 | sed -e 's/\([0-9]*\) \([0-9]*\.[0-9]*\) \(.*\)/\1 "\2% \3" off/' | sed -re "s/[ ]*(.*)/\1/g" >> $TOP10
+
+	eval $(cat $TOP10) > $CHOISES
+
+	for C in $(cat $CHOISES); do
+		kill -9 $C
+	done
+
+	clear
+	return 0
+}
+
+## \fn taskkill_killSearch
+## \brief Shows process that mashe the search.
+## \param SEARCH Temporary file which saves the dialog command.
+## \param CHOISES Temporary file which save list of the pid of the process to kill.
+## \param[in] 1 Process to search
+## \return 0 - Normal end.
+taskkill_killSearch()
+{
+	local SEARCH=`mktemp`
+	local CHOISES=`mktemp`
+	trap "rm -f $SEARCH $CHOISES" 0 1 2 5 9 15
+
+	i18n_fileout $SEARCH "dialogCMDSearch"	
+
+	ps -eo pid,pcpu,comm --sort=-pcpu | sed '1d' | grep -E "$1" | sed -e 's/\([0-9]*\) \([0-9]*\.[0-9]*\) \(.*\)/\1 "\2% \3" off/' | sed -re "s/[ ]*(.*)/\1/g" >> $SEARCH
+
+	eval $(cat $SEARCH) > $CHOISES
+
+	for C in $(cat $CHOISES); do
+		kill -9 $C
+	done
+	
+	clear
+	return 0
+}
+
+
+## \fn taskkill_search
+## \brief Shows the dialog which porpose to search a name of a process.
+## \param CMD Temporary file which saves the dialog command.
+## \param OK Save the return value of "dialog" command.
+## \param SEARCH Process to search.
+## \return 0 - Normal end.
+taskkill_search()
+{
+	local CMD=`mktemp`
+	trap "rm -f $CMD" 0 1 2 5 9 15
+	
+	eval $(i18n_display "search") 2> $CMD
+	local OK="$?"
+	
+	local SEARCH=`cat $CMD`
+
+	case $OK in
+	"0")
+	
+		if ps -eo pid,pcpu,comm --sort=-pcpu | sed '1d' | grep -E "$SEARCH"; then
+			taskkill_killSearch $SEARCH
+		else
+			clear
+			i18n_error "noProcess"
+			exit 2
+		fi;;
+	"1")
+		clear
+		exit 1;;
+	esac
+}
+
+## \fn taskkill_menu
+## \brief Shows the dialog menu.
+## \param MENU Temporary file which saves the dialog command.
+## \param CHOISE Save the return value of "dialog" command.
+## \return 0 - Normal end.
+taskkill_menu()
+{
+	local MENU=`mktemp`
+	trap "rm -f $MENU" 0 1 2 5 9 15
+	eval $(i18n_display "menu") 2> $MENU
+
+	local CHOISE=`cat $MENU`
+
+	CHOISE=`echo $CHOISE | awk {'printf $NF'}`
+
+	case $CHOISE in
+	"0")
+		taskkill_search;;
+	"1")
+		taskkill_killTop;;
+	*)
+		clear
+		return 0;;
+	esac
+}
+
+## \fn taskkill_main
+## \brief Verify the arguments end call apropriate fontions.
+## \param[in] * List of all the arguments passsed to the script.
+## \return 0 - Normal end.
+taskkill_main()
+{
+
+	if [ $# = 0 ]; then
+		taskkill_menu
+		return 0
+	fi
+
+	local top=0
+	local search=0
+
+	while [ $# -ne 0 ]; do
+		if [ "$1" = "--top" ] || [ "$1" = "-t" ]; then
+			top=1
+		elif [ "$1" = "--search" ] || [ "$1" = "-s" ]; then
+			search=1
+		elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+			taskkill_help
+		else
+			taskkill_syntaxError
+		fi
+		shift
+	done
+
+	if [ $top -eq 1 ] && [ $search -eq 0 ]; then
+		taskkill_killTop
+	elif [ $top -eq 0 ] && [ $search -eq 1 ]; then
+		taskkill_search
+	else
+		taskkill_syntaxError
+	fi
+
+	return 0
+}
+
+## \cond DUMMY
+
+source /usr/lib/ATB/alxdr-lib
+
+if alxdr_checkInstalled "dialog"; then
+	export TEXTDOMAIN=taskkill
+	clear
+	taskkill_main $*
+	exit 0
+fi
+
+## \endcond

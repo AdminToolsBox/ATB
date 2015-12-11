@@ -1,0 +1,4 @@
+/usr/bin/dialog --stdout --backtitle "Liste des Serveurs" --title "Selectionner un serveur sur lequel executer votre script" --radiolist "Si votre machine distant n'est pas présente ajouté là !" 30 80 15
+"Add a server" "" on
+"192.168.0.1" "" off
+"localhost" "" off
