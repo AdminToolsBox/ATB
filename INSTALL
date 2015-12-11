@@ -1,6 +1,6 @@
 1. Open a command prompt
 2. Change directory to the admin-tools-box-atb directory
 	"cd TheNameOfTheDownloadedDirectory"
-3. Run "chmod +x configure" && ./configure
+3. Run "chmod +x ./configure" && ./configure
 4. Run "sudo make install"
 5. Run "atb"

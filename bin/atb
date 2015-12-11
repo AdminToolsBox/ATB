@@ -1,0 +1,65 @@
+#!/bin/bash
+
+## \file atb
+## \author William Le Pommelet
+## \brief Admin Tools Box
+## \version 1.1.1
+## \date December 14th 2014
+##
+## This script provides a library of scripts you need to administrate a network.
+
+## \fn atb_help
+## \brief Shows the help page of this script.
+atb_help()
+{
+	i18n_display "help"
+	for f in `ls --almost-all /usr/bin/ATB`; do
+		echo -e "\t\t$f"
+	done
+	i18n_display "notes"
+
+	exit 0
+}
+
+## \fn atb_syntaxError
+## \brief Shows the error message after a wrong syntax call.
+atb_syntaxError()
+{
+	i18n_error "syntaxError"
+	exit 1
+}
+
+## \fn atb_main
+## \brief Verify the arguments end run the apropriate script
+## \param[in] * List of all the arguments passsed to the script.
+## \return 0 - Normal end.
+atb_main()
+{
+	if [ $# -eq 0 ]; then
+		atb_syntaxError
+	else
+		for f in `ls --almost-all /usr/bin/ATB`; do
+			if [ "$1" = "$f" ]; then
+				shift
+				/usr/bin/ATB/$f $*
+				exit 0
+			elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+				atb_help
+			else
+				continue
+			fi
+		done
+		
+		atb_syntaxError
+		
+	fi
+}
+
+## \cond DUMMY
+
+source /usr/lib/ATB/alxdr-lib
+export TEXTDOMAIN=atb
+clear
+atb_main $*
+
+## \endcond
