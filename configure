@@ -37,10 +37,10 @@ configure_syntaxError()
 
 configure_dependencies()
 {
-	version=$(grep "^NAME=" /etc/os-release | cut -d \" -f 2 | tr A-Z a-z)
+	version=$(grep "^NAME=" /etc/os-release | cut -d \= -f 2 | tr A-Z a-z)
 	case "$version" in  
 
-		fedora*)
+		*fedora*)
 		install="yum install"
 		;;
 
