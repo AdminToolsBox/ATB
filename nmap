@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DIALOG=${DIALOG=dialog}
+
+$DIALOG --title "Scanner de ports" \
+	--yesno "Ce programme vous accompagne dans l'utilisation de la commande nmap, souhaitez vous continuer ?" 10 40
+
+case $? in
+	0)	echo "Oui choisi. ";;
+	1)	echo "Non choisi. ";;
+	255)	echo "Appuyez sur Echap. ";;
+esac
