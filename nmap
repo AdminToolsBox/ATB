@@ -2,34 +2,23 @@
 
 DIALOG=${DIALOG=dialog}
 
-#$DIALOG --title "Scanner de ports" \
-OPTION=$(whiptail --title "Scanner de ports" --menu "Ce programme vous accompagne dans l'utilisation de la commande nmap." 15 60 4 \
-"1" "Scanner une adresse IP" \
-"2" "Scanner une plage d'adresses" \
-"3" "Exit"  3>&1 1>&2 2>&3)
+$DIALOG --title "Scanner de ports" --menu "Choose one:" 10 30 3 \
+#OPTION=$(whiptail --title "Scanner de ports" --menu "Ce programme vous accompagne dans l'utilisation de la commande nmap." 15 60 4 \
+1 "Scanner une adresse IP" \
+2 "Scanner une plage d'adresses" \
+3 "Exit" #3>&1 1>&2 2>&3)
  
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
-    echo "Vous avez choisi de : " $OPTION
+	if [ $OPTION = 1 ]; then
+	    echo "Vous avez choisi de scanner une adresse IP" 
+	elif [ $OPTION = 2 ]; then
+	    echo "Vous avez choisi de scanner une plage d'adresses"
+	elif [ $OPTION = 3 ]; then
+	    echo "Vous avez annulé"
+	fi
 else
-    echo "vous avez annulé"
+    echo "Vous avez annulé"
 fi
 
-case $? in
-	0) 
 
-
-
-
-
-
-#	--title "Choisissez un mode de scan" \
-	--radiolist "Mode de scan :" 20 61 5 \
-	"Scan d'une adresse" off\
-	"Scan d'une plage d'adresses" off\
-
-
-	1)	echo "Non choisi. ";;
-
-	255)	echo "Appuyez sur Echap. ";;
-esac
