@@ -2,23 +2,30 @@
 
 DIALOG=${DIALOG=dialog}
 
-$DIALOG --title "Scanner de ports" --menu "Choose one:" 10 30 3 \
-#OPTION=$(whiptail --title "Scanner de ports" --menu "Ce programme vous accompagne dans l'utilisation de la commande nmap." 15 60 4 \
-1 "Scanner une adresse IP" \
-2 "Scanner une plage d'adresses" \
-3 "Exit" #3>&1 1>&2 2>&3)
- 
-exitstatus=$?
-if [ $exitstatus = 0 ]; then
-	if [ $OPTION = 1 ]; then
-	    echo "Vous avez choisi de scanner une adresse IP" 
-	elif [ $OPTION = 2 ]; then
-	    echo "Vous avez choisi de scanner une plage d'adresses"
-	elif [ $OPTION = 3 ]; then
-	    echo "Vous avez annulé"
-	fi
-else
-    echo "Vous avez annulé"
-fi
+tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
+trap "rm -f $tempfile" 0 1 2 5 15
+
+$DIALOG --title "Scanner de ports" \
+	--menu "Ce programme vous accompagne dans l'utilisation de la commande nmap.
+Que souhaitez-vous faire ?" 15 60 4 \
+	1 "Scanner une adresse IP" \
+	2 "Scanner une plage d'adresses" \
+	3 "???" 2> $tempfile
+
+retour=$?
+case $retour in
+	0)
+		$DIALOG --title "Scanner de ports" \
+			--inputbox "Entrez l'adresse IP à scanner" 15 60 2>> $tempfile
+		sed -i '1iConstruction de votre commande : ' $tempfile
+		clear
+		cat $tempfile
+		echo		
+		;;
+	1)
+		clear;;
+	255)
+		clear;;
+esac
 
 
