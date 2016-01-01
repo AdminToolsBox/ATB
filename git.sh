@@ -5,16 +5,31 @@ read choix
 case $choix in
 
 	1)
-		printf "Entrez votre pseudo Git :\n"
-		read nickname
-		git config user.name "$nickname"
+		if [ "git config user.name" != "" ]; then
+		printf "Vous avez déjà défini un nom git, Voulez vous en changez ? [y/N] \n" 
+		read change
+			case $change in
+			y)
+				printf "Entrez votre pseudo Git :\n"
+                		read nickname
+                		git config user.name "$nickname"
+  			;;
+			n) 
+				break
+			esac
+		else 
+	 	printf "Entrez votre pseudo Git :\n"
+                read nickname
+                git config user.name "$nickname"
+		fi
+
 		printf "Entrez votre email (compte Github) :\n"
 		read email
 		git config --global user.email "$email"
 		printf "Entrez un proxy si necessaire :\n"
 		read proxy
 		if [ "$proxy" != "" ]; then 
-		git config --global http.proxy $proxy
+		git config --global http.proxy "$proxy"
 		fi
 	;;
 
@@ -34,6 +49,13 @@ case $choix in
                 branche ="master"
                 fi
 		git pull "$name" "$branche"
+	;;
+
+	3)
+		printf "Vos dépots :\n"
+	;;
+	*)
+		printf "Choix Invalide"
 
 esac
 
