@@ -28,7 +28,7 @@ case $choise in
 
 ############### Email Part ###############
 
-		if [ "git config user.name" != "" ]; then
+		if [ "git config user.email" != "" ]; then
 		printf "Vous avez déjà défini un email git, voulez vous en changez ? [y/N] \n"
 		read  changeemail
 			case $changeemail in
@@ -56,7 +56,11 @@ case $choise in
 
 ############### Resume ##############
 
-		
+		printf "Votre nom git est : " 
+		git config user.name 
+		printf "\n Votre email git est : "
+		git config user.email
+
 	;;
 
 	2)
