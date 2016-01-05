@@ -9,12 +9,12 @@ case $choix in
 		printf "Vous avez déjà défini un nom git, Voulez vous en changez ? [y/N] \n" 
 		read change
 			case $change in
-			y)
+			^[yY])
 				printf "Entrez votre pseudo Git :\n"
                 		read nickname
                 		git config user.name "$nickname"
   			;;
-			n) 
+			*) 
 				break
 			esac
 		else 
