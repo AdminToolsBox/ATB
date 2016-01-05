@@ -164,7 +164,7 @@ configure_config()
 configure_main()
 {
 	if [ $# -eq 0 ]; then
-		if configure_dependencies "nmap" && configure_dependencies "dialog" && configure_dependencies "gettext"; then
+		if configure_dependencies "nmap" && configure_dependencies "git" && configure_dependencies "make" && configure_dependencies "dialog" && configure_dependencies "gettext"; then
 			configure_config
 		else
 			exit 1
