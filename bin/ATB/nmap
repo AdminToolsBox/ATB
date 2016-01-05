@@ -1,0 +1,41 @@
+#!/bin/sh
+
+variable="nmap "
+
+printf "Ce programme vous accompagne dans l'utilisation de la commande nmap.\nQue souhaitez-vous faire ?\n"
+printf "\n############### MENU ###############\n"
+printf "\n1 - SPÉCIFICATIONS DES CIBLES \n2 - DÉCOUVERTE DES HÔTES \n3 - TECHNIQUES DE SCAN \n4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n5 - DÉTECTION DE SERVICE/VERSION \n6 - SCRIPT SCAN \n7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n8 - TEMPORISATION ET PERFORMANCE \n9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n"
+printf "\nChoix : "
+
+read choise
+case $choise in
+
+	1)
+############### SPÉCIFICATIONS DES CIBLES ###############
+
+clear;
+
+    printf "$variable"
+    printf "\n\n"
+
+    printf "############### SPÉCIFICATIONS DES CIBLES ###############"
+    printf "\nLes cibles peuvent être spécifiées par des noms d'hôtes, des adresses IP, des adresses de réseaux, etc. \nExemple: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0-255.0-255.1-254"
+    printf "\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \n"
+    printf "\nChoix : "
+
+read choise
+case $choise in
+
+1)
+variable+=""
+
+2)
+
+3)
+
+4)
+
+esac
+    ;;
+
+esac
