@@ -47,22 +47,49 @@ case $choise in
 		fi
 
 ############### Proxy Part ###############
-
-		printf "Entrez un proxy si necessaire :\n"
-		read proxy
-		if [ "$proxy" != "" ]; then 
-		git config --global http.proxy "$proxy"
+		if [ "git config --global http.proxy" != "" ]; then
+		printf "Vous avez déjà défini un proxy, voulez vous le changer ? [y/N] \n"
+		read changeproxy
+			case $changeproxy in
+			y|Y)
+				printf "Entrez un nouveau proxy : \n"
+				read proxy
+				git config --global http.proxy "$proxy"
+			;;
+			*)
+				break
+			esac
+		else
+		printf "Voulez vous définir un proxy pour git ?"
+			case $setproxy in
+			y|Y) 
+				printf "Entrez le proxy :\n"
+				read proxy
+				if [ "$proxy" != "" ]; then 
+				git config --global http.proxy "$proxy"
+				fi
+			;;
+			*)
+				break
+			esac
 		fi
 
 ############### Resume ##############
 
 		printf "Votre nom git est : " 
 		git config user.name 
-		printf "\n Votre email git est : "
+		printf "Votre email git est : "
 		git config user.email
-
+		if [ "git config --global http.proxy" != "" ]; then 
+			printf "Votre proxy est : "
+			git config --global http.proxy
+		else
+			printf "Vous n'avez pas défini de proxy" 		
+		fi
 	;;
-
+		
+############### Git Initialisation ###############
+		
 	2)
 		printf "Nom du nouveau dépot git :\n"
 		read name
