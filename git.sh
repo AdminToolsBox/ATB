@@ -1,16 +1,19 @@
 #!/bin/sh
 
 printf "1 - Configuration Git \n2 - Nouveau dépot Github \n"
-read choix
-case $choix in
+read choise
+case $choise in
 
 	1)
+		
+############### User Part ###############
+
 		if [ "git config user.name" != "" ]; then
 		printf "Vous avez déjà défini un nom git, Voulez vous en changez ? [y/N] \n" 
-		read change
-			case $change in
-			^[yY])
-				printf "Entrez votre pseudo Git :\n"
+		read changeuser
+			case $changeuser in
+			y|Y)
+				printf "Entrez un nouveau pseudo Git :\n"
                 		read nickname
                 		git config user.name "$nickname"
   			;;
@@ -18,19 +21,42 @@ case $choix in
 				break
 			esac
 		else 
-	 	printf "Entrez votre pseudo Git :\n"
+	 	printf "Entrez un pseudo Git :\n"
                 read nickname
                 git config user.name "$nickname"
 		fi
 
-		printf "Entrez votre email (compte Github) :\n"
-		read email
-		git config --global user.email "$email"
+############### Email Part ###############
+
+		if [ "git config user.name" != "" ]; then
+		printf "Vous avez déjà défini un email git, voulez vous en changez ? [y/N] \n"
+		read  changeemail
+			case $changeemail in
+			y|Y)
+				printf "Entrez une nouvelle adresse email (compte Github) :\n"
+				read email
+				git config --global user.email "$email"
+			;;
+			*)
+				break
+			esac
+		else
+		printf "Entrez une adresse email (compte Github) :\n"
+                read email
+                git config --global user.email "$email"
+		fi
+
+############### Proxy Part ###############
+
 		printf "Entrez un proxy si necessaire :\n"
 		read proxy
 		if [ "$proxy" != "" ]; then 
 		git config --global http.proxy "$proxy"
 		fi
+
+############### Resume ##############
+
+		
 	;;
 
 	2)
