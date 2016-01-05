@@ -27,7 +27,7 @@ read choise
 case $choise in
 
 1)
-variable+=""
+variable+=" "
 
 2)
 
