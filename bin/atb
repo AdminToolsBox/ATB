@@ -13,7 +13,7 @@
 atb_help()
 {
 	i18n_display "help"
-	for f in `ls --almost-all /usr/bin/ATB`; do
+	for f in `ls --almost-all /usr/bin/ATBapps`; do
 		echo -e "\t\t$f"
 	done
 	i18n_display "notes"
@@ -38,10 +38,10 @@ atb_main()
 	if [ $# -eq 0 ]; then
 		atb_syntaxError
 	else
-		for f in `ls --almost-all /usr/bin/ATB`; do
+		for f in `ls --almost-all /usr/bin/ATBapps`; do
 			if [ "$1" = "$f" ]; then
 				shift
-				/usr/bin/ATB/$f $*
+				/usr/bin/ATBapps/$f $*
 				exit 0
 			elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
 				atb_help

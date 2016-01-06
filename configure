@@ -87,9 +87,9 @@ install:
 	echo "Run 'atb --help'"
 
 unistall:
-	rm -r -f /usr/bin/ATB
+	rm -r -f /usr/bin/ATBapps
 	rm -f /usr/bin/atb
-	rm -r -f /usr/lib/ATB
+	rm -r -f /usr/lib/ATBapps
 	rm -r -f /usr/locale
 	rm -r -f ./locale
 	rm -r -f ./doc
