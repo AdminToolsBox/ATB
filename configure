@@ -117,8 +117,8 @@ return 0
 ## \return 0 - Normal end.
 configure_permitions()
 {
-	for file in `ls --almost-all ./bin/ATB`; do
-		chmod 754 "./bin/ATB/$file"
+	for file in `ls --almost-all ./bin/ATBapps`; do
+		chmod 754 "./bin/ATBapps/$file"
 	done
 
 	for file in `ls --almost-all ./lib/ATB`; do
