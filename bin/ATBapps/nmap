@@ -8,7 +8,7 @@ clear;
 printf "Votre commande : $variable\n\n"
 printf "Ce programme vous accompagne dans l'utilisation de la commande nmap.\n(Entrez \"q\" pour quiter le programme).\nQue souhaitez-vous faire ?\n"
 printf "\n############### MENU ###############\n"
-printf "\n1 - SPÉCIFICATIONS DES CIBLES \n2 - DÉCOUVERTE DES HÔTES \n3 - TECHNIQUES DE SCAN \n4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n5 - DÉTECTION DE SERVICE/VERSION \n6 - SCRIPT SCAN \n7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n8 - TEMPORISATION ET PERFORMANCE \n9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \nq - QUITER PROGRAMME\n"
+printf "\n 1 - SPÉCIFICATIONS DES CIBLES \n 2 - DÉCOUVERTE DES HÔTES \n 3 - TECHNIQUES DE SCAN \n 4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n 5 - DÉTECTION DE SERVICE/VERSION \n 6 - SCRIPT SCAN \n 7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n 8 - TEMPORISATION ET PERFORMANCE \n 9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n q - QUITER PROGRAMME\n"
 printf "\nChoix : "
 read choise
 }
