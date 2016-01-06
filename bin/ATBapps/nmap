@@ -40,7 +40,18 @@ menu
             case $choise in
 
             1)
-            variable+="-iL"
+            printf "Chemin d'accès du fichier : "
+            read fichier
+            if [ -f fichier ];then
+                variable+="-iL "$fichier
+            else
+                printf "Le fichier saisi n'existe pas, appuyez sur une touche pour recommencer : \n"
+                read touche
+                if [ touche != * ];then
+                    exit
+                fi
+
+            fi
             ;;
 
             2)
