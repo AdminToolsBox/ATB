@@ -6,32 +6,77 @@ fonction_fichier()
 {
 printf "Chemin d'accès du fichier : "
 read fichier
-    if [[ -f $fichier || "$fichier"!="" ]];then
+    if [[ -f $fichier && "$fichier" != "" ]];then
         variable+=" $1 $fichier"
-        fichier=""
+    elif [ "$fichier" = "" ];then
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
     else
         printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
         read touche
-            if [ touche != * ];then
+            if [ "$touche" != * ];then
                 exit
             fi
     fi
+fichier=""
 choise=""
 }
+
+###############
 
 fonction_nombre()
 {
 printf "Nombre : "
 read nombre
-    if [ "$(echo $nombre | grep "^[ [:digit:] ]*$")" ];then
+    if [[ "$(echo $nombre | grep "^[ [:digit:] ]*$")" && "$nombre" != "" ]];then
         variable+=" $1 $nombre"
+    elif [ "$fichier" = "" ];then
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+        if [ "$touche" != * ];then
+            exit
+        fi
     else
         printf "$nombre n'est pas un nombre, appuyez sur une touche pour recommencer...\n"
         read touche
-            if [ touche != * ];then
+            if [ "$touche" != * ];then
                 exit
             fi
     fi
+nombre=""
+choise=""
+}
+
+###############
+
+fonction_hotes()
+{
+printf "Hôte : "
+read hote
+    if [ "$hote" != "" ];then
+        variable+=" $1 $hote"
+        printf "Souhaitez vous ajouter un autre hôte ? (y/N)"
+        read autre
+            while [ "$autre" = "y" ]
+            do
+                printf "Hôte : "
+                read hote
+                variable+=", $hote"
+                printf "Souhaitez vous ajouter un autre hôte ? (y/N)"
+                read autre
+            done
+    else
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    fi
+hote=""
+autre=""
 choise=""
 }
 
@@ -87,7 +132,7 @@ menu
             ;;
 
             3)
-                fonction_ajouthotes
+                fonction_hotes "--exclude"
             ;;
 
             4)
