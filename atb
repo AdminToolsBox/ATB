@@ -1,0 +1,32 @@
+.\" Manpage for atb
+.\" Contact us via Github to correct errors or typos : https://github.com/AdminToolsBox/ATB
+.TH ATB 1 "07 January 2016" "2.0" "ATB man page"
+.SH NAME
+atb \- sysadmin tool which allows you to run complex commands very easily on a remote computer.
+.SH SYNOPSIS
+atb [OPTION]
+.SH DESCRIPTION
+
+ATB is a sysadmin tool which allows you to run complex commands very easily on a remote computer.
+This program is made by students from Clermont University in France. 
+
+.SH OPTIONS
+
+.TP
+\fBalive\fP 
+Allow to see on an IP range which are the host alive (pingable).
+
+.TP
+\fBinfosys\fP 
+Allow to get information on a remote computer
+
+.TP
+\fBtaskkill\fP 
+Task Manager which allow you to see the main tasks running, search one specific and kill it.
+
+.SH SEE ALSO
+htop(1), nmap(A)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+William Misson (william@quarahtk.org)
