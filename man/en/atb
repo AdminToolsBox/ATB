@@ -13,12 +13,20 @@ This program is made by students from Clermont University in France.
 .SH OPTIONS
 
 .TP
+\fB--help\fP 
+To know which script is available in ATB and which comands to use.
+
+.TP
 \fBalive\fP 
 Allow to see on an IP range which are the host alive (pingable).
 
 .TP
+\fBgit\fP 
+Allow to configure and use git.
+
+.TP
 \fBinfosys\fP 
-Allow to get information on a remote computer
+Allow to get information on a remote computer.
 
 .TP
 \fBtaskkill\fP 
@@ -27,6 +35,7 @@ Task Manager which allow you to see the main tasks running, search one specific 
 .SH SEE ALSO
 htop(1), nmap(A)
 .SH BUGS
+
 No known bugs.
 .SH AUTHOR
 William Misson (william@quarahtk.org)
