@@ -1,6 +1,27 @@
 #!/bin/sh
 
-variable="nmap "
+############### FONCTIONS ###############
+
+fonction_fichier()
+{
+printf "Chemin d'accès du fichier : "
+read fichier
+    if [ -f $fichier ];then
+        variable+=" $1 $fichier"
+        else
+        printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ touche != * ];then
+                exit
+            fi
+    fi
+}
+
+#########################################
+
+
+
+variable="nmap"
 
 menu()
 {
@@ -40,27 +61,18 @@ menu
             case $choise in
 
             1)
-            printf "Chemin d'accès du fichier : "
-            read fichier
-            if [ -f fichier ];then
-                variable+="-iL "$fichier
-            else
-                printf "Le fichier saisi n'existe pas, appuyez sur une touche pour recommencer : \n"
-                read touche
-                if [ touche != * ];then
-                    exit
-                fi
-
-            fi
+                fonction_fichier "-iL"
             ;;
 
             2)
+
             ;;
 
             3)
             ;;
 
             4)
+                fonction_fichier "-iR"
             ;;
 
             q)
