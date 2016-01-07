@@ -52,7 +52,7 @@ choise=""
 
 ###############
 
-fonction_hotes()
+fonction_repete()
 {
 printf "Hôte : "
 read hote
@@ -80,33 +80,54 @@ autre=""
 choise=""
 }
 
-#########################################
+###############
 
+fonction_choix()
+{
+choise=""
+printf "\nChoix : "
+read choise
+    if [ "$choise" -le "$#" ];then
+        variable+=" ${!choise}"
+    elif [ "$choise" = "" ];then
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    else
+        printf "Le choix $choise n'existe pas, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    fi
+fichier=""
+choise=""
+}
+
+#########################################
 
 variable="nmap"
 
 menu()
 {
 clear;
+choise=""
 printf "Votre commande : $variable\n\n"
 printf "Ce programme vous accompagne dans l'utilisation de la commande nmap.\n(Entrez \"q\" pour quiter le programme).\nQue souhaitez-vous faire ?\n"
 printf "\n############### MENU ###############\n"
 printf "\n 1 - SPÉCIFICATIONS DES CIBLES \n 2 - DÉCOUVERTE DES HÔTES \n 3 - TECHNIQUES DE SCAN \n 4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n 5 - DÉTECTION DE SERVICE/VERSION \n 6 - SCRIPT SCAN \n 7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n 8 - TEMPORISATION ET PERFORMANCE \n 9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n12 - MODIFIER MANUELLEMENT COMMANDE \n q - QUITER PROGRAMME\n"
 printf "\nChoix : "
 read choise
-}
-
-while [ "$choise" != "q" ]
-do
-choise=""
-menu
-    case $choise in
+case $choise in
 
     1)
     ############### SPÉCIFICATIONS DES CIBLES ###############
         menu_case1()
         {
         clear;
+        choise=""
         printf "Votre commande : $variable\n\n"
 
         printf "############### SPÉCIFICATIONS DES CIBLES ###############\n\n"
@@ -120,36 +141,60 @@ menu
         do
         choise=""
         menu_case1
-
             case $choise in
-
-            1)
-                fonction_fichier "-iL"
-            ;;
-
-            2)
-                fonction_nombre "-iR"
-            ;;
-
-            3)
-                fonction_hotes "--exclude"
-            ;;
-
-            4)
-                fonction_fichier "-iR"
-            ;;
-
-            q)
-            choise=""
-            menu
-            ;;
-
+                1)fonction_fichier "-iL";;
+                2)fonction_nombre "-iR";;
+                3)fonction_repete "--exclude";;
+                4)fonction_fichier "-iR";;
+                q)choise="" menu;;
             esac
         done
-        ;;
-    q)
-    choise=""
-    exit 0
     ;;
+
+    2)
+    ############### DÉCOUVERTE DES HÔTES ###############
+        menu_case2()
+        {
+        clear;
+        choise=""
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### DÉCOUVERTE DES HÔTES ###############\n\n"
+        printf "1 - -sL: List Scan - Liste simplement les cibles à scanner \n2 - -sP: Ping Scan - Ne fait que déterminer si les hôtes sont en ligne \n3 - -P0: Considère que tous les hôtes sont en ligne -- évite la découverte des hôtes \n4 - -PN: Considérer tous les hôtes comme étant connectés -- saute l'étape de découverte des hôtes \n5 - -PS/PA/PU [portlist]: Découverte TCP SYN/ACK ou UDP des ports en paramètre \n6 - -PE/PP/PM: Découverte de type requête ICMP echo, timestamp ou netmask \n7 - -PO [num de protocole]: Ping IP (par type) \n8 - -n/-R: Ne jamais résoudre les noms DNS/Toujours résoudre [résout les cibles actives par défaut] \n9 - --dns-servers <serv1[,serv2],...>: Spécifier des serveurs DNS particuliers \nq - SORTIR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "q" ]
+        do
+        choise=""
+        menu_case2
+            case $choise in
+                1)variable+=" -sL";;
+                2)variable+=" -sP";;
+                3)variable+=" -P0";;
+                4)variable+=" -PN";;
+5)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
+fonction_choix "-n" "-R";;
+                6)printf "\n1 - -PE: Découverte de type requête ICMP echo \n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
+                    fonction_choix "-PE" "-PP" "-PM";;
+7)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
+fonction_choix "-n" "-R";;
+                8)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
+                    fonction_choix "-n" "-R";;
+                9)fonction_repete "--dns-servers";;
+                q)choise="" menu;;
+            esac
+        done
+    ;;
+
+
+
+
+    q)choise="" exit 0;;
+
 esac
-done
+}
+
+menu
