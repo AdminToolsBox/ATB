@@ -6,19 +6,36 @@ fonction_fichier()
 {
 printf "Chemin d'accès du fichier : "
 read fichier
-    if [ -f $fichier ];then
+    if [[ -f $fichier || "$fichier"!="" ]];then
         variable+=" $1 $fichier"
-        else
+        fichier=""
+    else
         printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
         read touche
             if [ touche != * ];then
                 exit
             fi
     fi
+choise=""
+}
+
+fonction_nombre()
+{
+printf "Nombre : "
+read nombre
+    if [ "$(echo $nombre | grep "^[ [:digit:] ]*$")" ];then
+        variable+=" $1 $nombre"
+    else
+        printf "$nombre n'est pas un nombre, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ touche != * ];then
+                exit
+            fi
+    fi
+choise=""
 }
 
 #########################################
-
 
 
 variable="nmap"
@@ -29,15 +46,15 @@ clear;
 printf "Votre commande : $variable\n\n"
 printf "Ce programme vous accompagne dans l'utilisation de la commande nmap.\n(Entrez \"q\" pour quiter le programme).\nQue souhaitez-vous faire ?\n"
 printf "\n############### MENU ###############\n"
-printf "\n 1 - SPÉCIFICATIONS DES CIBLES \n 2 - DÉCOUVERTE DES HÔTES \n 3 - TECHNIQUES DE SCAN \n 4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n 5 - DÉTECTION DE SERVICE/VERSION \n 6 - SCRIPT SCAN \n 7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n 8 - TEMPORISATION ET PERFORMANCE \n 9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n q - QUITER PROGRAMME\n"
+printf "\n 1 - SPÉCIFICATIONS DES CIBLES \n 2 - DÉCOUVERTE DES HÔTES \n 3 - TECHNIQUES DE SCAN \n 4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n 5 - DÉTECTION DE SERVICE/VERSION \n 6 - SCRIPT SCAN \n 7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n 8 - TEMPORISATION ET PERFORMANCE \n 9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n12 - MODIFIER MANUELLEMENT COMMANDE \n q - QUITER PROGRAMME\n"
 printf "\nChoix : "
 read choise
 }
 
-while [ choise != q ]
+while [ "$choise" != "q" ]
 do
+choise=""
 menu
-
     case $choise in
 
     1)
@@ -49,13 +66,14 @@ menu
 
         printf "############### SPÉCIFICATIONS DES CIBLES ###############\n\n"
         printf "Les cibles peuvent être spécifiées par des noms d'hôtes, des adresses IP, des adresses de réseaux, etc. \nExemple: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0-255.0-255.1-254"
-        printf "\n\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \nq - SORTIR\n"
+        printf "\n\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard (0 pour infini) \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \nq - SORTIR\n"
         printf "\nChoix : "
         read choise
         }
 
-        while [ choise != q ]
+        while [ "$choise" != "q" ]
         do
+        choise=""
         menu_case1
 
             case $choise in
@@ -65,10 +83,11 @@ menu
             ;;
 
             2)
-
+                fonction_nombre "-iR"
             ;;
 
             3)
+                fonction_ajouthotes
             ;;
 
             4)
@@ -76,6 +95,7 @@ menu
             ;;
 
             q)
+            choise=""
             menu
             ;;
 
@@ -83,7 +103,8 @@ menu
         done
         ;;
     q)
-    exit
+    choise=""
+    exit 0
     ;;
 esac
 done
