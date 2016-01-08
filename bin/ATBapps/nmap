@@ -52,7 +52,7 @@ choise=""
 
 ###############
 
-fonction_repete()
+fonction_repetehost()
 {
 printf "Hôte : "
 read hote
@@ -65,7 +65,7 @@ read hote
                 printf "Hôte : "
                 read hote
                 variable+=", $hote"
-                printf "Souhaitez vous ajouter un autre hôte ? (y/N)"
+                printf "Souhaitez vous ajouter un autre hôte ? (y/N) : "
                 read autre
             done
     else
@@ -82,6 +82,36 @@ choise=""
 
 ###############
 
+fonction_repeteport()
+{
+printf "Port : "
+read port
+    if [ "$port" != "" ];then
+        variable+=" $port"
+        printf "Souhaitez vous ajouter un autre port ? (y/N)"
+        read autre
+            while [ "$autre" = "y" ]
+            do
+                printf "Port : "
+                read port
+                variable+=" $port"
+                printf "Souhaitez vous ajouter un autre port ? (y/N) : "
+                read autre
+            done
+    else
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    fi
+port=""
+autre=""
+choise=""
+}
+
+###############
+
 fonction_choix()
 {
 choise=""
@@ -89,6 +119,29 @@ printf "\nChoix : "
 read choise
     if [ "$choise" -le "$#" ];then
         variable+=" ${!choise}"
+        if [ "$renseigneport" = "y" ];then
+            printf "Port : "
+            read port
+                if [ "$port" != "" ];then
+                    variable+=" $port"
+                    printf "Souhaitez vous ajouter un autre port ? (y/N)"
+                    read autre
+                    while [ "$autre" = "y" ]
+                    do
+                        printf "Port : "
+                        read port
+                        variable+=" $port"
+                        printf "Souhaitez vous ajouter un autre port ? (y/N) : "
+                        read autre
+                    done
+                else
+                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    read touche
+                        if [ "$touche" != * ];then
+                            exit
+                        fi
+                fi
+        fi
     elif [ "$choise" = "" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
@@ -102,7 +155,22 @@ read choise
                 exit
             fi
     fi
-fichier=""
+port=""
+autre=""
+renseigneport=""
+choise=""
+}
+
+###############
+
+fonction_ecriture()
+{
+printf "$1"
+read entree
+    if [ "$entree" != "" ];then
+        variable+=" $entree"
+    fi
+entree=""
 choise=""
 }
 
@@ -142,11 +210,12 @@ case $choise in
         choise=""
         menu_case1
             case $choise in
-                1)fonction_fichier "-iL";;
-                2)fonction_nombre "-iR";;
-                3)fonction_repete "--exclude";;
-                4)fonction_fichier "-iR";;
-                q)choise="" menu;;
+                1)  choise="" fonction_fichier "-iL";;
+                2)  choise="" fonction_nombre "-iR";;
+                3)  choise="" fonction_repetehost "--exclude";;
+                4)  choise="" fonction_fichier "-iR";;
+                q)  choise="" menu;;
+                *)  choise="" menu_case1;;
             esac
         done
     ;;
@@ -171,30 +240,32 @@ case $choise in
         choise=""
         menu_case2
             case $choise in
-                1)variable+=" -sL";;
-                2)variable+=" -sP";;
-                3)variable+=" -P0";;
-                4)variable+=" -PN";;
-5)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
-fonction_choix "-n" "-R";;
-                6)printf "\n1 - -PE: Découverte de type requête ICMP echo \n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
+                1)  choise="" variable+=" -sL";;
+                2)  choise="" variable+=" -sP";;
+                3)  choise="" variable+=" -P0";;
+                4)  choise="" variable+=" -PN";;
+                5)  choise="" printf "\n1 - -PS [portlist]: Découverte TCP SYN des ports en paramètre \n2 - -PA [portlist]: Découverte TCP ACK des ports en paramètre\n3 - -PU [portlist]: Découverte TCP UDP des ports en paramètre\n"
+                    renseigneport="y"
+                    fonction_choix "-PS" "-PA" "-PU";;
+                6)  choise="" printf "\n1 - -PE: Découverte de type requête ICMP echo \n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
                     fonction_choix "-PE" "-PP" "-PM";;
-7)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
-fonction_choix "-n" "-R";;
-                8)printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
+                7)  choise="" variable+=" -PO"
+                    entree="Entrez une adresse IP : "
+                    fonction_ecriture "$entree";;
+                8)  choise="" printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
                     fonction_choix "-n" "-R";;
-                9)fonction_repete "--dns-servers";;
-                q)choise="" menu;;
+                9)  choise="" fonction_repetehost "--dns-servers";;
+                q)  choise="" menu;;
+                *)  choise="" menu_case2;;
+
             esac
         done
     ;;
 
-
-
-
-    q)choise="" exit 0;;
-
+    q)  choise="" exit 0;;
+    *)	choise="" menu;;
 esac
 }
 
+choise=""
 menu
