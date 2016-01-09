@@ -165,10 +165,10 @@ choise=""
 
 fonction_ecriture()
 {
-printf "$1"
+printf "$2"
 read entree
     if [ "$entree" != "" ];then
-        variable+=" $entree"
+        variable+=" $1 $entree"
     fi
 entree=""
 choise=""
@@ -249,9 +249,9 @@ case $choise in
                     fonction_choix "-PS" "-PA" "-PU";;
                 6)  choise="" printf "\n1 - -PE: Découverte de type requête ICMP echo\n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
                     fonction_choix "-PE" "-PP" "-PM";;
-                7)  choise="" variable+=" -PO"
+                7)  choise=""
                     entree="Entrez une adresse IP : "
-                    fonction_ecriture "$entree";;
+                    fonction_ecriture "-PO" "$entree";;
                 8)  choise="" printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
                     fonction_choix "-n" "-R";;
                 9)  choise="" fonction_repetehost "--dns-servers";;
@@ -277,30 +277,38 @@ case $choise in
         read choise
         }
 
--sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon
--sN/sF/sX: Scans TCP Null, FIN et Xmas
--sU: Scan UDP
---scanflags <flags>: Personnalise les flags des scans TCP
+//-sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon
+//-sN/sF/sX: Scans TCP Null, FIN et Xmas
+//-sU: Scan UDP
+//--scanflags <flags>: Personnalise les flags des scans TCP
 -sI <zombie host[:probeport]>: Idlescan (scan passif)
--sO: Scan des protocoles supportés par la couche IP
--b <ftp relay host>: Scan par rebond FTP
---traceroute: Détermine une route vers chaque hôte
---reason: Donne la raison pour laquelle tel port apparait à tel état
+//-sO: Scan des protocoles supportés par la couche IP
+//-b <ftp relay host>: Scan par rebond FTP
+//--traceroute: Détermine une route vers chaque hôte
+//--reason: Donne la raison pour laquelle tel port apparait à tel état
+1)  choise="" printf "\n1 - \n2 - \n3 - \n4 - \n5 - \n"
+fonction_choix "-" "-" "-";;
 
         while [ "$choise" != "q" ]
         do
         choise=""
         menu_case2
             case $choise in
-                1)
-                2)
-                3)
-                4)
+                1)  choise="" printf "\n1 - -sS: Scans TCP SYN\n2 - -sT: Scans TCP Connect()\n3 - -sA: Scans TCP ACK\n4 - -sW: Scans TCP Window\n5 - -sM: Scans TCP Maimon\n"
+                    fonction_choix "-sS" "-sT" "-sA" "-sW" "-sM";;
+                2)  choise="" printf "\n1 - -sN: Scans TCP Null\n2 - -sF: Scans TCP FIN\n3 - -sX: Scans TCP Xmas\n"
+                    fonction_choix "-sN" "-sF" "-sX";;
+                3)  choise="" variable+=" -sU";;
+                4)  choise=""
+                    entree="Entrez un flag : "
+                    fonction_ecriture "--scanflags" "$entree";;
                 5)
-                6)
-                7)
-                8)
-                9)
+                6)  choise="" variable+=" -sO";;
+                7)  choise=""
+                    entree="Entrez un relay FTP : "
+                    fonction_ecriture "-b" "$entree";;
+                8)  choise="" variable+=" --traceroute";;
+                9)  choise="" variable+=" --reason";;
                 q)  choise="" menu;;
                 *)  choise="" menu_case2;;
 
