@@ -112,6 +112,26 @@ choise=""
 
 ###############
 
+fonction_hostport()
+{
+printf "Hôte[:Port] : "
+read hoteport
+    if [ "$hoteport" != "" ];then
+        variable+=" $1 $hoteport"
+    else
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    fi
+hoteport=""
+autre=""
+choise=""
+}
+
+###############
+
 fonction_choix()
 {
 choise=""
@@ -277,22 +297,10 @@ case $choise in
         read choise
         }
 
-//-sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon
-//-sN/sF/sX: Scans TCP Null, FIN et Xmas
-//-sU: Scan UDP
-//--scanflags <flags>: Personnalise les flags des scans TCP
--sI <zombie host[:probeport]>: Idlescan (scan passif)
-//-sO: Scan des protocoles supportés par la couche IP
-//-b <ftp relay host>: Scan par rebond FTP
-//--traceroute: Détermine une route vers chaque hôte
-//--reason: Donne la raison pour laquelle tel port apparait à tel état
-1)  choise="" printf "\n1 - \n2 - \n3 - \n4 - \n5 - \n"
-fonction_choix "-" "-" "-";;
-
         while [ "$choise" != "q" ]
         do
         choise=""
-        menu_case2
+        menu_case3
             case $choise in
                 1)  choise="" printf "\n1 - -sS: Scans TCP SYN\n2 - -sT: Scans TCP Connect()\n3 - -sA: Scans TCP ACK\n4 - -sW: Scans TCP Window\n5 - -sM: Scans TCP Maimon\n"
                     fonction_choix "-sS" "-sT" "-sA" "-sW" "-sM";;
@@ -302,7 +310,8 @@ fonction_choix "-" "-" "-";;
                 4)  choise=""
                     entree="Entrez un flag : "
                     fonction_ecriture "--scanflags" "$entree";;
-                5)
+                5)  choise=""
+                    fonction_hostport "-sI";;
                 6)  choise="" variable+=" -sO";;
                 7)  choise=""
                     entree="Entrez un relay FTP : "
