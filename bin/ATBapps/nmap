@@ -426,6 +426,62 @@ case $choise in
         done
     ;;
 
+    6)
+    ############### SCRIPT SCAN ###############
+        menu_case6()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### SCRIPT SCAN ###############\n\n"
+        printf "1 - -sC: équivalent de --script=safe,intrusive \n2 - --script=<lua scripts>: <lua scripts> est une liste de répertoires ou de scripts séparés par des virgules \n3 - --script-args=<n1=v1,[n2=v2,...]>: passer des arguments aux scripts \n4 - --script-trace: Montre toutes les données envoyées ou recues \n5 - --script-updatedb: Met à jour la base de données des scripts. Seulement fait si -sC ou --script a été aussi donné. \nq - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case6
+            case $choise in
+                1)  choise="" variable+=" -sC";;
+                2)  choise=""
+                    printf "Entrez une liste de répertoires ou de scripts séparés par des virgules :\n"
+                    read liste
+                        if [ -n "$liste" ];then
+                            variable+=" --script=$liste"
+                        else
+                            printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                            read touche
+                                if [ "$touche" != * ];then
+                                    exit
+                                fi
+                        fi
+                    liste=""
+                    ;;
+                3)  choise=""
+                    printf "Passer des arguments aux scripts suivant l'exemple <n1=v1,[n2=v2,...]> : \n"
+                    read liste
+                        if [ -n "$liste" ];then
+                            variable+=" --script-args=$liste"
+                        else
+                            printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                            read touche
+                                if [ "$touche" != * ];then
+                                    exit
+                                fi
+                        fi
+                    liste=""
+                    ;;
+                4)  choise="" variable+=" --script-trace";;
+                5)  choise="" variable+=" --script-updatedb";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
 
     q)  choise="" exit 0;;
     *)	choise="" menu;;
