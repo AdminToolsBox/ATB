@@ -6,9 +6,9 @@ fonction_fichier()
 {
 printf "Chemin d'accès du fichier : "
 read fichier
-    if [[ -f $fichier && "$fichier" != "" ]];then
+    if [[ -f $fichier && -n "$fichier" ]];then
         variable+=" $1 $fichier"
-    elif [ "$fichier" = "" ];then
+    elif [ -z "$fichier" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
@@ -23,17 +23,22 @@ read fichier
     fi
 fichier=""
 choise=""
+touche=""
 }
 
 ###############
 
 fonction_nombre()
 {
-printf "Nombre : "
+if [ "$#" = 1 ];then
+    printf "Nombre : "
+else
+    printf "$2 : "
+fi
 read nombre
-    if [[ "$(echo $nombre | grep "^[ [:digit:] ]*$")" && "$nombre" != "" ]];then
+    if [[ "$(echo $nombre | grep "^[ [:digit:] ]*$")" && -n "$nombre" ]];then
         variable+=" $1 $nombre"
-    elif [ "$fichier" = "" ];then
+    elif [ -z "$fichier" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
         if [ "$touche" != * ];then
@@ -48,6 +53,7 @@ read nombre
     fi
 nombre=""
 choise=""
+touche=""
 }
 
 ###############
@@ -56,7 +62,7 @@ fonction_repetehost()
 {
 printf "Hôte : "
 read hote
-    if [ "$hote" != "" ];then
+    if [ -n "$hote" ];then
         variable+=" $1 $hote"
         printf "Souhaitez vous ajouter un autre hôte ? (y/N)"
         read autre
@@ -78,6 +84,7 @@ read hote
 hote=""
 autre=""
 choise=""
+touche=""
 }
 
 ###############
@@ -86,7 +93,7 @@ fonction_repeteport()
 {
 printf "Port : "
 read port
-    if [ "$port" != "" ];then
+    if [ -n "$port" ];then
         variable+=" $port"
         printf "Souhaitez vous ajouter un autre port ? (y/N)"
         read autre
@@ -116,7 +123,7 @@ fonction_hostport()
 {
 printf "Hôte[:Port] : "
 read hoteport
-    if [ "$hoteport" != "" ];then
+    if [ -n "$hoteport" ];then
         variable+=" $1 $hoteport"
     else
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
@@ -128,6 +135,7 @@ read hoteport
 hoteport=""
 autre=""
 choise=""
+touche=""
 }
 
 ###############
@@ -137,12 +145,12 @@ fonction_choix()
 choise=""
 printf "\nChoix : "
 read choise
-    if [ "$choise" -le "$#" ];then
+    if [[ "$choise" -le "$#" && -n "$choise" ]];then
         variable+=" ${!choise}"
         if [ "$renseigneport" = "y" ];then
             printf "Port : "
             read port
-                if [ "$port" != "" ];then
+                if [ -n "$port" ];then
                     variable+=" $port"
                     printf "Souhaitez vous ajouter un autre port ? (y/N)"
                     read autre
@@ -161,8 +169,27 @@ read choise
                             exit
                         fi
                 fi
+        elif [ "$renseigneport" = "o" ];then
+            choise=""
+            printf "Souhaitez vous entrer un numéro de port ? (y/N) : "
+            read choise
+                if [ "$choise" = "y" ];then
+                    printf "\nPort : "
+                    read port
+                    variable+=" $port"
+                    choise=""
+                    port=""
+                elif [[ "$choise" = "n" || "$choise" = "N" || -z "$choise" ]];then
+                    variable+=""
+                else
+                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    read touche
+                        if [ "$touche" != * ];then
+                            exit
+                        fi
+                fi
         fi
-    elif [ "$choise" = "" ];then
+    elif [ -z "$choise" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
@@ -177,8 +204,10 @@ read choise
     fi
 port=""
 autre=""
+touche=""
 renseigneport=""
 choise=""
+touche=""
 }
 
 ###############
@@ -187,7 +216,7 @@ fonction_ecriture()
 {
 printf "$2"
 read entree
-    if [ "$entree" != "" ];then
+    if [ -n "$entree" ];then
         variable+=" $1 $entree"
     fi
 entree=""
@@ -265,7 +294,7 @@ case $choise in
                 3)  choise="" variable+=" -P0";;
                 4)  choise="" variable+=" -PN";;
                 5)  choise="" printf "\n1 - -PS [portlist]: Découverte TCP SYN des ports en paramètre\n2 - -PA [portlist]: Découverte TCP ACK des ports en paramètre\n3 - -PU [portlist]: Découverte TCP UDP des ports en paramètre\n"
-                    renseigneport="y"
+                    renseigneport="o"
                     fonction_choix "-PS" "-PA" "-PU";;
                 6)  choise="" printf "\n1 - -PE: Découverte de type requête ICMP echo\n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
                     fonction_choix "-PE" "-PP" "-PM";;
@@ -319,7 +348,46 @@ case $choise in
                 8)  choise="" variable+=" --traceroute";;
                 9)  choise="" variable+=" --reason";;
                 q)  choise="" menu;;
-                *)  choise="" menu_case2;;
+                *)  choise="" menu_case3;;
+
+            esac
+        done
+    ;;
+
+    4)
+    ############### SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN ###############
+        menu_case4()
+        {
+        clear;
+        choise=""
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN ###############\n\n"
+        printf "1 - -p <plage de ports>: Ne scanne que les ports spécifiés \n2 - -F: Fast - Ne scanne que les ports listés dans le fichier nmap-services \n3 - -r: Scan séquentiel des ports, ne mélange pas leur ordre \n4 - --top-ports <nombre>: Scan <nombre> de ports parmis les plus courants \n5 - --port-ratio <ratio>: Scan <ratio> pourcent des ports les plus courants \nq - SORTIR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "q" ]
+        do
+        choise=""
+        menu_case4
+            case $choise in
+                1)  choise=""
+#                    printf "Renseignez l'option selon l'exemple :\n-p22; -p1-65535; -pU:53,111,137,T:21-25,80,139,8080\nOption : "
+#                    read option ;;
+#                    if [[ "$(echo $option | grep "^[ [:digit:] ]*$")" && -n "$option" ]];then
+#                        printf "ca marche"
+#                        read
+#                    fi
+;;
+                2)  choise="" variable+=" -F";;
+                3)  choise="" variable+=" -r";;
+                4)  choise="" fonction_nombre "--top-ports";;
+                5)  choise="" fonction_nombre "--port-ratio" "Ratio";;
+                q)  choise="" menu;;
+                *)  choise="" menu_case4;;
 
             esac
         done
