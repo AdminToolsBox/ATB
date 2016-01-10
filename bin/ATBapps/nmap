@@ -546,10 +546,59 @@ case $choise in
         done
     ;;
 
+    9)
+    ############### ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ ###############
+        menu_case9()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ ###############\n\n"
+        printf "
+ 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n
+ 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n
+ 3 - -S <IP_Address>: Usurpe l'adresse source \n
+ 4 - -e <iface>: Utilise l'interface réseau spécifiée \n
+ 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n
+ 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n
+ 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n
+ 8 - --ttl <val>: Spécifie le champ time-to-live IP \n
+ 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n
+10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \n
+q - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case9
+            case $choise in
+                1)  choise="" ;;
+                2)  choise="" ;;
+                3)  choise="" ;;
+                4)  choise="" ;;
+                5)  choise="" ;;
+                6)  choise="" ;;
+                7)  choise="" ;;
+                8)  choise="" ;;
+                9)  choise="" ;;
+                10) choise="" variable+=" --badsum";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
+
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
 }
+
+
 
 choise=""
 menu
