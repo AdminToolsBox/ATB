@@ -36,7 +36,7 @@ else
     printf "$2 : "
 fi
 read nombre
-    if [[ "$(echo $nombre | grep "^[ [:digit:] ]*$")" && -n "$nombre" ]];then
+    if [[ "$(echo $nombre | grep "^[ [:digit:] ]")" && -n "$nombre" ]];then
         variable+=" $1 $nombre"
     elif [ -z "$fichier" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
@@ -208,6 +208,18 @@ read choise
                             exit
                         fi
                 fi
+        elif [ "$renseignenombre" = "y" ];then
+            printf "Valeur : "
+            read valeur
+                if [ -n "$valeur" ];then
+                    variable+=" $valeur"
+                else
+                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                read touche
+                    if [ "$touche" != * ];then
+                        exit
+                    fi
+                fi
         fi
     elif [ -z "$choise" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
@@ -223,9 +235,11 @@ read choise
             fi
     fi
 port=""
+valeur=""
 autre=""
 touche=""
 renseigneport=""
+renseignenombre=""
 choise=""
 touche=""
 }
@@ -482,6 +496,49 @@ case $choise in
                 1)  choise="" variable+=" -O";;
                 2)  choise="" variable+=" --osscan-limit";;
                 3)  choise="" variable+=" --osscan-guess";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
+    8)
+    ############### TEMPORISATION ET PERFORMANCE ###############
+        menu_case8()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### TEMPORISATION ET PERFORMANCE ###############\n\n"
+        printf "Les options qui prennent un argument de temps sont en milisecondes a moins que vous ne spécifiez 's' (secondes), 'm' (minutes), ou 'h' (heures) à la valeur (e.g. 30m).\n\n"
+        printf "1 - -T[0-5]: Choisit une politique de temporisation (plus élevée, plus rapide) \n2 - --min-hostgroup/max-hostgroup <msec>: Tailles des groupes d'hôtes à scanner en parallèle \n3 - --min-parallelism/max-parallelism <msec>: Parallélisation des paquets de tests (probes) \n4 - --min-rtt-timeout/max-rtt-timeout/initial-rtt-timeout <msec>: Spécifie le temps d'aller-retour des paquets de tests \n5 - --max-retries <tries>: Nombre de retransmissions des paquets de tests des scans de ports \n6 - --host-timeout <msec>: Délai d'expiration du scan d'un hôte \n7 - --scan-delay/--max_scan-delay <msec>: Ajuste le délai de retransmission entre deux paquets de tests \n8 - --min-rate <nombre>: Envoyer au minimum <nombre> paquets par seconde \n9 - --max-rate <nombre>: Envoyer au maximum <nombre> paquets par seconde \nq - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case8
+            case $choise in
+                1)  choise="" fonction_nombre "-T" "Temporisation [0-5]";;
+                2)  choise="" printf "\n1 - --min-hostgroup <msec>\n2 - --max-hostgroup <msec>\n"
+                    renseignenombre="y"
+                    fonction_choix "--min-hostgroup" "--max-hostgroup";;
+                3)  choise="" printf "\n1 - --min-parallelism <msec>\n2 - --max-parallelism <msec>\n"
+                    renseignenombre="y"
+                    fonction_choix "--min-parallelism" "--max-parallelism";;
+                4)  choise="" printf "\n1 - --min-rtt-timeout <msec>\n2 - --max-rtt-timeout <msec>\n3 - --initial-rtt-timeout <msec>\n"
+                    renseignenombre="y"
+                    fonction_choix "--min-rtt-timeout" "--max-rtt-timeout" "--initial-rtt-timeout";;
+                5)  choise="" fonction_nombre "--max-retries" "Nombre d'essais";;
+                6)  choise="" fonction_nombre "--host-timeout" "Délai d'expiration";;
+                7)  choise="" printf "\n1 - --scan-delay <msec>\n2 - --max_scan-delay <msec>\n"
+                    renseignenombre="y"
+                    fonction_choix "--scan-delay" "--max_scan-delay";;
+                8)  choise="" fonction_nombre "--min-rate";;
+                9)  choise="" fonction_nombre "--max-rate";;
                 q)  choise="" menu;;
                 *)  choise="" clear;;
 
