@@ -237,9 +237,14 @@ fonction_ecriture()
 printf "$2"
 read entree
     if [ -n "$entree" ];then
-        variable+=" $1 $entree"
+        if [ "$espace" = "n" ];then
+            variable+=" $1$entree"
+        else
+            variable+=" $1 $entree"
+        fi
     fi
 entree=""
+espace=""
 choise=""
 }
 
@@ -445,34 +450,8 @@ case $choise in
         menu_case6
             case $choise in
                 1)  choise="" variable+=" -sC";;
-                2)  choise=""
-                    printf "Entrez une liste de répertoires ou de scripts séparés par des virgules :\n"
-                    read liste
-                        if [ -n "$liste" ];then
-                            variable+=" --script=$liste"
-                        else
-                            printf "Erreur, appuyez sur une touche pour recommencer...\n"
-                            read touche
-                                if [ "$touche" != * ];then
-                                    exit
-                                fi
-                        fi
-                    liste=""
-                    ;;
-                3)  choise=""
-                    printf "Passer des arguments aux scripts suivant l'exemple <n1=v1,[n2=v2,...]> : \n"
-                    read liste
-                        if [ -n "$liste" ];then
-                            variable+=" --script-args=$liste"
-                        else
-                            printf "Erreur, appuyez sur une touche pour recommencer...\n"
-                            read touche
-                                if [ "$touche" != * ];then
-                                    exit
-                                fi
-                        fi
-                    liste=""
-                    ;;
+                2)  choise="" espace="n" fonction_ecriture "--script=" "Entrez une liste de répertoires ou de scripts séparés par des virgules :\n";;
+                3)  choise="" espace="n" fonction_ecriture "--script=" "Passer des arguments aux scripts suivant l'exemple <n1=v1,[n2=v2,...]> : \n";;
                 4)  choise="" variable+=" --script-trace";;
                 5)  choise="" variable+=" --script-updatedb";;
                 q)  choise="" menu;;
@@ -481,7 +460,6 @@ case $choise in
             esac
         done
     ;;
-
 
     q)  choise="" exit 0;;
     *)	choise="" menu;;
