@@ -140,6 +140,26 @@ touche=""
 
 ###############
 
+fonction_plageport()
+{
+printf "Renseignez l'option selon l'exemple :\n-p22; -p1-65535; -pU:53,111,137,T:21-25,80,139,8080\nOption : "
+read option
+    if [ -n "$(echo $option | grep ^-p)" ];then
+        variable+=" $option"
+    else
+        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        read touche
+            if [ "$touche" != * ];then
+                exit
+            fi
+    fi
+option=""
+choise=""
+touche=""
+}
+
+###############
+
 fonction_choix()
 {
 choise=""
@@ -254,7 +274,7 @@ case $choise in
         read choise
         }
 
-        while [ "$choise" != "q" ]
+        while [ "$choise" != "Q" ]
         do
         choise=""
         menu_case1
@@ -284,7 +304,7 @@ case $choise in
         read choise
         }
 
-        while [ "$choise" != "q" ]
+        while [ "$choise" != "Q" ]
         do
         choise=""
         menu_case2
@@ -306,7 +326,6 @@ case $choise in
                 9)  choise="" fonction_repetehost "--dns-servers";;
                 q)  choise="" menu;;
                 *)  choise="" menu_case2;;
-
             esac
         done
     ;;
@@ -326,7 +345,7 @@ case $choise in
         read choise
         }
 
-        while [ "$choise" != "q" ]
+        while [ "$choise" != "Q" ]
         do
         choise=""
         menu_case3
@@ -369,19 +388,12 @@ case $choise in
         read choise
         }
 
-        while [ "$choise" != "q" ]
+        while [ "$choise" != "Q" ]
         do
         choise=""
         menu_case4
             case $choise in
-                1)  choise=""
-#                    printf "Renseignez l'option selon l'exemple :\n-p22; -p1-65535; -pU:53,111,137,T:21-25,80,139,8080\nOption : "
-#                    read option ;;
-#                    if [[ "$(echo $option | grep "^[ [:digit:] ]*$")" && -n "$option" ]];then
-#                        printf "ca marche"
-#                        read
-#                    fi
-;;
+                1)  choise="" fonction_plageport;;
                 2)  choise="" variable+=" -F";;
                 3)  choise="" variable+=" -r";;
                 4)  choise="" fonction_nombre "--top-ports";;
