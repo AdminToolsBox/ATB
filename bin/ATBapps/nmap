@@ -264,19 +264,17 @@ case $choise in
         menu_case1()
         {
         clear;
-        choise=""
         printf "Votre commande : $variable\n\n"
 
         printf "############### SPÉCIFICATIONS DES CIBLES ###############\n\n"
         printf "Les cibles peuvent être spécifiées par des noms d'hôtes, des adresses IP, des adresses de réseaux, etc. \nExemple: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0-255.0-255.1-254"
-        printf "\n\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard (0 pour infini) \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \nq - SORTIR\n"
+        printf "\n\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard (0 pour infini) \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \nq - RETOUR\n"
         printf "\nChoix : "
         read choise
         }
 
         while [ "$choise" != "Q" ]
         do
-        choise=""
         menu_case1
             case $choise in
                 1)  choise="" fonction_fichier "-iL";;
@@ -284,7 +282,7 @@ case $choise in
                 3)  choise="" fonction_repetehost "--exclude";;
                 4)  choise="" fonction_fichier "-iR";;
                 q)  choise="" menu;;
-                *)  choise="" menu_case1;;
+                *)  choise="" clear;;
             esac
         done
     ;;
@@ -294,11 +292,10 @@ case $choise in
         menu_case2()
         {
         clear;
-        choise=""
         printf "Votre commande : $variable\n\n"
 
         printf "############### DÉCOUVERTE DES HÔTES ###############\n\n"
-        printf "1 - -sL: List Scan - Liste simplement les cibles à scanner \n2 - -sP: Ping Scan - Ne fait que déterminer si les hôtes sont en ligne \n3 - -P0: Considère que tous les hôtes sont en ligne -- évite la découverte des hôtes \n4 - -PN: Considérer tous les hôtes comme étant connectés -- saute l'étape de découverte des hôtes \n5 - -PS/PA/PU [portlist]: Découverte TCP SYN/ACK ou UDP des ports en paramètre \n6 - -PE/PP/PM: Découverte de type requête ICMP echo, timestamp ou netmask \n7 - -PO [num de protocole]: Ping IP (par type) \n8 - -n/-R: Ne jamais résoudre les noms DNS/Toujours résoudre [résout les cibles actives par défaut] \n9 - --dns-servers <serv1[,serv2],...>: Spécifier des serveurs DNS particuliers \nq - SORTIR\n"
+        printf "1 - -sL: List Scan - Liste simplement les cibles à scanner \n2 - -sP: Ping Scan - Ne fait que déterminer si les hôtes sont en ligne \n3 - -P0: Considère que tous les hôtes sont en ligne -- évite la découverte des hôtes \n4 - -PN: Considérer tous les hôtes comme étant connectés -- saute l'étape de découverte des hôtes \n5 - -PS/PA/PU [portlist]: Découverte TCP SYN/ACK ou UDP des ports en paramètre \n6 - -PE/PP/PM: Découverte de type requête ICMP echo, timestamp ou netmask \n7 - -PO [num de protocole]: Ping IP (par type) \n8 - -n/-R: Ne jamais résoudre les noms DNS/Toujours résoudre [résout les cibles actives par défaut] \n9 - --dns-servers <serv1[,serv2],...>: Spécifier des serveurs DNS particuliers \nq - RETOUR\n"
 
         printf "\nChoix : "
         read choise
@@ -306,7 +303,6 @@ case $choise in
 
         while [ "$choise" != "Q" ]
         do
-        choise=""
         menu_case2
             case $choise in
                 1)  choise="" variable+=" -sL";;
@@ -325,7 +321,7 @@ case $choise in
                     fonction_choix "-n" "-R";;
                 9)  choise="" fonction_repetehost "--dns-servers";;
                 q)  choise="" menu;;
-                *)  choise="" menu_case2;;
+                *)  choise="" clear;;
             esac
         done
     ;;
@@ -335,19 +331,16 @@ case $choise in
         menu_case3()
         {
         clear;
-        choise=""
         printf "Votre commande : $variable\n\n"
 
         printf "############### DÉCOUVERTE DES HÔTES ###############\n\n"
-        printf "1 - -sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon \n2 - -sN/sF/sX: Scans TCP Null, FIN et Xmas \n3 - -sU: Scan UDP \n4 - --scanflags <flags>: Personnalise les flags des scans TCP \n5 - -sI <zombie host[:probeport]>: Idlescan (scan passif) \n6 - -sO: Scan des protocoles supportés par la couche IP \n7 - -b <ftp relay host>: Scan par rebond FTP \n8 - --traceroute: Détermine une route vers chaque hôte \n9 - --reason: Donne la raison pour laquelle tel port apparait à tel état \nq - SORTIR\n"
-
+        printf "1 - -sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon \n2 - -sN/sF/sX: Scans TCP Null, FIN et Xmas \n3 - -sU: Scan UDP \n4 - --scanflags <flags>: Personnalise les flags des scans TCP \n5 - -sI <zombie host[:probeport]>: Idlescan (scan passif) \n6 - -sO: Scan des protocoles supportés par la couche IP \n7 - -b <ftp relay host>: Scan par rebond FTP \n8 - --traceroute: Détermine une route vers chaque hôte \n9 - --reason: Donne la raison pour laquelle tel port apparait à tel état \nq - RETOUR\n"
         printf "\nChoix : "
         read choise
         }
 
         while [ "$choise" != "Q" ]
         do
-        choise=""
         menu_case3
             case $choise in
                 1)  choise="" printf "\n1 - -sS: Scans TCP SYN\n2 - -sT: Scans TCP Connect()\n3 - -sA: Scans TCP ACK\n4 - -sW: Scans TCP Window\n5 - -sM: Scans TCP Maimon\n"
@@ -367,7 +360,7 @@ case $choise in
                 8)  choise="" variable+=" --traceroute";;
                 9)  choise="" variable+=" --reason";;
                 q)  choise="" menu;;
-                *)  choise="" menu_case3;;
+                *)  choise="" clear;;
 
             esac
         done
@@ -378,11 +371,10 @@ case $choise in
         menu_case4()
         {
         clear;
-        choise=""
         printf "Votre commande : $variable\n\n"
 
         printf "############### SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN ###############\n\n"
-        printf "1 - -p <plage de ports>: Ne scanne que les ports spécifiés \n2 - -F: Fast - Ne scanne que les ports listés dans le fichier nmap-services \n3 - -r: Scan séquentiel des ports, ne mélange pas leur ordre \n4 - --top-ports <nombre>: Scan <nombre> de ports parmis les plus courants \n5 - --port-ratio <ratio>: Scan <ratio> pourcent des ports les plus courants \nq - SORTIR\n"
+        printf "1 - -p <plage de ports>: Ne scanne que les ports spécifiés \n2 - -F: Fast - Ne scanne que les ports listés dans le fichier nmap-services \n3 - -r: Scan séquentiel des ports, ne mélange pas leur ordre \n4 - --top-ports <nombre>: Scan <nombre> de ports parmis les plus courants \n5 - --port-ratio <ratio>: Scan <ratio> pourcent des ports les plus courants \nq - RETOUR\n"
 
         printf "\nChoix : "
         read choise
@@ -390,7 +382,6 @@ case $choise in
 
         while [ "$choise" != "Q" ]
         do
-        choise=""
         menu_case4
             case $choise in
                 1)  choise="" fonction_plageport;;
@@ -399,7 +390,7 @@ case $choise in
                 4)  choise="" fonction_nombre "--top-ports";;
                 5)  choise="" fonction_nombre "--port-ratio" "Ratio";;
                 q)  choise="" menu;;
-                *)  choise="" menu_case4;;
+                *)  choise="" clear;;
 
             esac
         done
