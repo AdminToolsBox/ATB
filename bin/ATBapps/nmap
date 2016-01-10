@@ -461,12 +461,38 @@ case $choise in
         done
     ;;
 
+    7)
+    ############### DÉTECTION DE SYSTÈME D'EXPLOITATION ###############
+        menu_case7()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### DÉTECTION DE SYSTÈME D'EXPLOITATION ###############\n\n"
+        printf "1 - -O: Active la détection d'OS \n2 - --osscan-limit: Limite la détection aux cibles prométeuses \n3 - --osscan-guess: Détecte/Devine l'OS de façon plus agressive \nq - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case7
+            case $choise in
+                1)  choise="" variable+=" -O";;
+                2)  choise="" variable+=" --osscan-limit";;
+                3)  choise="" variable+=" --osscan-guess";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
 }
-
-
 
 choise=""
 menu
