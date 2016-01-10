@@ -554,13 +554,7 @@ case $choise in
         printf "Votre commande : $variable\n\n"
 
         printf "############### ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ ###############\n\n"
-        printf "
- 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n
- 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n
- 3 - -S <IP_Address>: Usurpe l'adresse source \n
- 4 - -e <iface>: Utilise l'interface réseau spécifiée \n
- 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n
- 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n 8 - --ttl <val>: Spécifie le champ time-to-live IP \n 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \nq - RETOUR\n"
+        printf " 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n 3 - -S <IP_Address>: Usurpe l'adresse source \n 4 - -e <iface>: Utilise l'interface réseau spécifiée \n 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n 8 - --ttl <val>: Spécifie le champ time-to-live IP \n 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \nq - RETOUR\n"
 
         printf "\nChoix : "
         read choise
@@ -570,18 +564,38 @@ case $choise in
         do
         menu_case9
             case $choise in
-                1)  choise="" ;;
-                2)  choise="" ;;
-                3)  choise="" ;;
-                4)  choise="" ;;
-                5)  choise="" ;;
+                1)  choise=""
+                    variable+=" -f"
+                    printf "\nVoulez-vous spécifier la MTU ? (y/N) : "
+                    read choise
+                        if [ $choise = "y" ];then
+                            printf "Valeur : "
+                            read valeur
+                                if [ -n "$valeur" ];then
+                                    variable+=" --mtu $valeur"
+                                fi
+                            valeur=""
+                        fi
+                    choise="";;
+                2)  choise=""
+                    entree="\nRenseignez les leurres suivant l'exemple <decoy1,decoy2[,ME],...> : \n"
+                    fonction_ecriture "-D" "$entree";;
+                3)  choise=""
+                    entree="\nEntrez l'adresse IP source : "
+                    fonction_ecriture "-S" "$entree";;
+                4)  choise=""
+                    entree="\nEntrez l'interface réseau : "
+                    fonction_ecriture "-e" "$entree";;
+                5)  choise="" printf "\n1 - -g <portnum>\n2 - --source-port <portnum>\n"
+                    renseigneport="y"
+                    fonction_choix "-g" "--source-port";;
                 6)  choise="" fonction_nombre "--data-length";;
                 7)  choise=""
-                    entree="Entrez des options IP : "
+                    entree="\nEntrez des options IP : "
                     fonction_ecriture "--ip-options" "$entree";;
                 8)  choise="" fonction_nombre "--ttl" "Valeur";;
                 9)  choise=""
-                    entree="Entrez une adresse MAC, un préfixe ou le nom du fabriquant : "
+                    entree="\nEntrez une adresse MAC, un préfixe ou le nom du fabriquant : "
                     fonction_ecriture "--spoof-mac" "$entree";;
                 10) choise="" variable+=" --badsum";;
                 q)  choise="" menu;;
@@ -591,13 +605,10 @@ case $choise in
         done
     ;;
 
-
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
 }
-
-
 
 choise=""
 menu
