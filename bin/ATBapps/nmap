@@ -396,10 +396,43 @@ case $choise in
         done
     ;;
 
+    5)
+    ############### DÉTECTION DE SERVICE/VERSION ###############
+        menu_case5()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### DÉTECTION DE SERVICE/VERSION ###############\n\n"
+        printf "1 - -sV: Teste les ports ouverts pour déterminer le service en écoute et sa version \n2 - --version-light: Limite les tests aux plus probables pour une identification plus rapide \n3 - --version-intensity <niveau>: De 0 (léger) à 9 (tout essayer) \n4 - --version-all: Essaie un à un tous les tests possibles pour la détection des versions \n5 - --version-trace: Affiche des informations détaillées du scan de versions (pour débogage) \nq - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case5
+            case $choise in
+                1)  choise="" variable+=" -sV";;
+                2)  choise="" variable+=" --version-light";;
+                3)  choise="" fonction_nombre "--version-intensity" "Niveau (de 0 à 9)";;
+                4)  choise="" variable+=" --version-all";;
+                5)  choise="" variable+=" --version-trace";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
+
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
 }
+
+
 
 choise=""
 menu
