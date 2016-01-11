@@ -680,6 +680,41 @@ case $choise in
         done
     ;;
 
+    11)
+    ############### DIVERS ###############
+    menu_case11()
+    {
+    clear;
+    printf "Votre commande : $variable\n\n"
+
+    printf "############### DIVERS ###############\n\n"
+    printf "1 - -6: Active le scan IPv6 \n2 - -A: Active la détection du système d'exploitation et des versions \n3 - --datadir <dirname>: Spécifie un dossier pour les fichiers de données de Nmap \n4 - --send-eth/--send-ip: Envoie des paquets en utilisant des trames Ethernet ou des paquets IP bruts \n5 - --privileged: Suppose que l'utilisateur est entièrement privilégié \n6 - -V: Affiche le numéro de version \n7 - --unprivileged: Suppose que l'utilisateur n'a pas les privilèges d'usage des raw socket \n8 - -h: Affiche ce résumé de l'aide\nq - RETOUR\n"
+    printf "\nChoix : "
+    read choise
+    }
+
+    while [ "$choise" != "Q" ]
+    do
+    menu_case11
+        case $choise in
+            1)  choise="" variable+=" -6";;
+            2)  choise="" variable+=" -A";;
+            3)  choise=""
+                entree="\nEntrez un dossier pour les fichiers de données de Nmap : "
+                fonction_ecriture "--datadir" "$entree";;
+            4)  choise=""
+                printf "\n1 - --send-eth: Envoie des paquets en utilisant des trames Ethernet \n2 - --send-ip: Envoie des paquets en utilisant des paquets IP bruts\n"
+                fonction_choix "--send-eth" "--send-ip";;
+            5)  choise="" variable+=" --privileged";;
+            6)  choise="" variable+=" -V";;
+            7)  choise="" variable+=" --unprivileged";;
+            8)  choise="" variable+=" -h";;
+            q)  choise="" menu;;
+            *)  choise="" clear;;
+        esac
+    done
+    ;;
+
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
