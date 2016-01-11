@@ -163,6 +163,7 @@ touche=""
 fonction_choix()
 {
 choise=""
+sauvegarde="$variable"
 printf "\nChoix : "
 read choise
     if [[ "$choise" -le "$#" && -n "$choise" ]];then
@@ -183,6 +184,7 @@ read choise
                         read autre
                     done
                 else
+                    variable="$sauvegarde"
                     printf "Erreur, appuyez sur une touche pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
@@ -202,6 +204,7 @@ read choise
                 elif [[ "$choise" = "n" || "$choise" = "N" || -z "$choise" ]];then
                     variable+=""
                 else
+                    variable="$sauvegarde"
                     printf "Erreur, appuyez sur une touche pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
@@ -214,12 +217,36 @@ read choise
                 if [ -n "$valeur" ];then
                     variable+=" $valeur"
                 else
+                    variable="$sauvegarde"
                     printf "Erreur, appuyez sur une touche pour recommencer...\n"
                 read touche
                     if [ "$touche" != * ];then
                         exit
                     fi
                 fi
+        elif [ "$renseignefichier" = "y" ];then
+            printf "Chemin d'accès du fichier : "
+            read fichier
+                if [[ -f $fichier && -n "$fichier" ]];then
+                    variable+=" $fichier"
+                elif [ -z "$fichier" ];then
+                    variable="$sauvegarde"
+                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    read touche
+                        if [ "$touche" != * ];then
+                            exit
+                        fi
+                else
+                    variable="$sauvegarde"
+                    printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
+                    read touche
+                        if [ "$touche" != * ];then
+                            exit
+                        fi
+                fi
+            fichier=""
+            choise=""
+            touche=""
         fi
     elif [ -z "$choise" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
@@ -240,8 +267,10 @@ autre=""
 touche=""
 renseigneport=""
 renseignenombre=""
+renseignefichier=""
 choise=""
 touche=""
+sauvegarde=""
 }
 
 ###############
@@ -554,7 +583,7 @@ case $choise in
         printf "Votre commande : $variable\n\n"
 
         printf "############### ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ ###############\n\n"
-        printf " 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n 3 - -S <IP_Address>: Usurpe l'adresse source \n 4 - -e <iface>: Utilise l'interface réseau spécifiée \n 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n 8 - --ttl <val>: Spécifie le champ time-to-live IP \n 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \nq - RETOUR\n"
+        printf " 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n 3 - -S <IP_Address>: Usurpe l'adresse source \n 4 - -e <iface>: Utilise l'interface réseau spécifiée \n 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n 8 - --ttl <val>: Spécifie le champ time-to-live IP \n 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \n q - RETOUR\n"
 
         printf "\nChoix : "
         read choise
@@ -598,6 +627,52 @@ case $choise in
                     entree="\nEntrez une adresse MAC, un préfixe ou le nom du fabriquant : "
                     fonction_ecriture "--spoof-mac" "$entree";;
                 10) choise="" variable+=" --badsum";;
+                q)  choise="" menu;;
+                *)  choise="" clear;;
+
+            esac
+        done
+    ;;
+
+    10)
+    ############### SORTIE ###############
+        menu_case10()
+        {
+        clear;
+        printf "Votre commande : $variable\n\n"
+
+        printf "############### SORTIE ###############\n\n"
+        printf " 1 - -oN/-oX/-oS/-oG <file>: Sortie dans le fichier en paramètre des résultats du scan au format normal, XML, s|<rIpt kIddi3 et format Grepable \n 2 - -oA <basename>: Sortie dans les trois formats majeurs en même temps \n 3 - -v: Rend Nmap plus verbeux (-vv pour plus d'effet) \n 4 - -d: Mode debuggage (-dd pour plus d'effet) \n 5 - --packet-trace: Affiche tous les paquets émis et reçus \n 6 - --iflist: Affiche les interfaces et les routes de l'hôte (pour débogage) \n 7 - --log-errors: Journalise les erreurs/alertes dans un fichier au format normal \n 8 - --append-output: Ajoute la sortie au fichier plutôt que de l'écraser \n 9 - --resume <filename>: Reprend un scan interrompu \n10 - --stylesheet <path/URL>: Feuille de styles XSL pour transformer la sortie XML en HTML \n11 - --webxml: Feuille de styles de références de Insecure.Org pour un XML plus portable \n12 - --no_stylesheet: Nmap n'associe pas la feuille de styles XSL à la sortie XML \n q - RETOUR\n"
+
+        printf "\nChoix : "
+        read choise
+        }
+
+        while [ "$choise" != "Q" ]
+        do
+        menu_case10
+            case $choise in
+                1)  choise=""
+                    renseignefichier="y"
+                    printf "\n1 - -oN: Sortie au format normal\n2 - -oX: Sortie au format XML\n3 - -oS: Sortie au format s|<rIpt kIddi3\n4 - -oG: Sortie au format Grepable\n"
+                    fonction_choix "-oN" "-oX" "-oS" "-oG";;
+                2)  choise=""
+                    entree="\nEntrez un nom : "
+                    fonction_ecriture "-oA" "$entree";;
+                3)  choise="" printf "\n1 - -v\n2 - -vv (plus d'effet)\n"
+                    fonction_choix "-v" "-vv";;
+                4)  choise="" printf "\n1 - -d\n2 - -dd (plus d'effet)\n"
+                    fonction_choix "-d" "-dd";;
+                5)  choise="" variable+=" --packet-trace";;
+                6)  choise="" variable+=" --iflist";;
+                7)  choise="" variable+=" --log-errors";;
+                8)  choise="" variable+=" --append-output";;
+                9)  choise="" fonction_fichier "--resume";;
+                10) choise=""
+                    entree="\nEntrez le chemin d'un fichier ou un URL : "
+                    fonction_ecriture "--stylesheet" "$entree";;
+                11) choise="" variable+=" --webxml";;
+                12) choise="" variable+=" --no_stylesheet";;
                 q)  choise="" menu;;
                 *)  choise="" clear;;
 
