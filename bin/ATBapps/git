@@ -6,6 +6,7 @@
 ## \version 1.0.8
 ## \date January 5th 2016
 
+i18n_display "menu"
 printf "1 - Configuration Git \n2 - Nouveau dépot Github \n"
 read choise
 case $choise in

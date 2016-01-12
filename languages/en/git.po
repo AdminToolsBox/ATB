@@ -1,0 +1,3 @@
+msgid "menu"
+msgstr "1 - Git configuration \n\
+	2 - New Github Repository"
