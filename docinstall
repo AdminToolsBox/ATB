@@ -1,5 +1,9 @@
 #!/bin/sh
 
-printf "Copy man file in the file folder."
-sudo tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
+
+tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
+
+tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
+
+
 
