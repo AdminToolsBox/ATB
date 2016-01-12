@@ -715,6 +715,15 @@ case $choise in
     done
     ;;
 
+    12)
+    ############### MODIFIER MANUELLEMENT COMMANDE ###############
+
+    clear
+
+    exit 0
+
+    ;;
+
     q)  choise="" exit 0;;
     *)	choise="" menu;;
 esac
