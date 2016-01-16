@@ -742,16 +742,18 @@ do
     elif [ -n "$test" ]; then
         while [ -n "$test" ]
         do
-            printf ""$j" - -$(echo $variable | cut -d' -' -f"$i")\n"
+            printf ""$j" - -$(echo $variable | cut -d" " -f"$i")\n"
             i=$((i+1))
             j=$((j+1))
-            test2=$(printf "$(echo $variable | cut -d' -' -f"$i")")
+            printf "bra"
+            read bra
+            test2=$(printf "$(echo $variable | cut -d" " -f"$i")")
                 if [ "$test2" = "" ]; then
                     i=$((i+1))
-                    test3=$(printf "$(echo $variable | cut -d' -'-f"$i")")
+                    test3=$(printf "$(echo $variable | cut -d" " -f"$i")")
                         if [ -n "$test3" ]; then
 
-                            printf ""$j" - --$(echo $variable | cut -d' -' -f"$i")\n"
+                            printf ""$j" - --$(echo $variable | cut -d" " -f"$i")\n"
                             i=$((i+1))
                             j=$((j+1))
                         else
