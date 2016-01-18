@@ -1,3 +1,10 @@
 #!/bin/sh
-cd ~ 
-ls 
+
+printf "Quel fichier voulez vous compresser ?\n"
+read fil
+printf "Où voulez vous obtenir votre fichier ?\n"
+read destination
+printf "Nom de l'archive : \n"
+read nom
+destination = destination+=nom+=".gz"
+tar zcvf $destination $fil
