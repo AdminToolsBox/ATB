@@ -2,5 +2,6 @@
 2. Change directory to the admin-tools-box-atb directory
 	"cd TheNameOfTheDownloadedDirectory"
 3. Run "chmod +x ./configure" && ./configure
-4. Run "sudo make install"
-5. Run "atb"
+4. Run ./docinstall if you want to install the manual. (Optionnal)
+5. Run "sudo make install"
+6. Run "atb"

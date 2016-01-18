@@ -1,9 +1,22 @@
 #!/bin/sh
 
 
-tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
+user=$(whoami)
+	case "$user" in  
+  
+		root)
+			#tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
+			tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
+			
 
-tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
+		;;
+
+		*)	echo "This script need root permision, please run it like that :"
+			echo "sudo $0 $*"
+		;;
+
+	esac
+
 
 
 
