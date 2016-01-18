@@ -12,12 +12,21 @@ user=$(whoami)
 				1|en|english)			
 					tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
 					printf "The manual was install in English with sucess.\n"
+					exit 0
 				;;
 				
 				2|fr|french)
 					tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
 					printf "Le manuel a bien été installé en Français.\n"
+					exit 0
 				;;
+
+				*)			
+					printf "The language specified isn't correct or available"	
+					
+				;;
+
+				
 			esac	
 		;;
 		*)	echo "This script need root permision, please run it like that :"
