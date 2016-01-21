@@ -727,41 +727,35 @@ case $choise in
 
     i="2"
     j="1"
-
+    option=""
     test="$variable"
+    nb_mots="$(echo "$variable" | wc -w | sed 's/^[ \t]*//')"
 
 while [ -n "$test" ]
 do
     if [[ "$test" = "nmap" || "$test" = "" ]]; then
         printf "Erreur, vous n'avez pas renseigné d'option.\nAppuyez sur une touche pour retourner au menu principal...\n"
         read touche
-            if [ "$touche" != * ];then
+            if [ "$touche" != * ]; then
                 exit
             fi
         menu
     elif [ -n "$test" ]; then
-        while [ -n "$test" ]
-        do
-            printf ""$j" - -$(echo $variable | cut -d" " -f"$i")\n"
-            i=$((i+1))
-            j=$((j+1))
-            printf "bra"
-            read bra
-            test2=$(printf "$(echo $variable | cut -d" " -f"$i")")
-                if [ "$test2" = "" ]; then
-                    i=$((i+1))
-                    test3=$(printf "$(echo $variable | cut -d" " -f"$i")")
-                        if [ -n "$test3" ]; then
 
-                            printf ""$j" - --$(echo $variable | cut -d" " -f"$i")\n"
-                            i=$((i+1))
-                            j=$((j+1))
-                        else
-                            printf "\nChoix : "
-                            read choise
-                        fi
-                fi
+        while [ "$i" -le "$nb_mots" ]
+        do
+            PremierCarChaine="$(echo $test | cut -d" " -f"$i" | cut -c-1)"
+
+            echo "$PremierCarChaine"
+
+#            if [ echo "$(echo "$(echo $test | cut -d" " -f"$i"):0:1")" -eq "-" ]; then
+#                echo "$j - coucou $i\n"
+#            fi
+                i=$((i+1))
+                j=$((j+1))
+
         done
+
     fi
 done
 
@@ -769,30 +763,6 @@ printf "fin boucle"
 read d
 
 
-
-#    i="0"
-#    j="0"
-#
-#test=$variable
-#
-#while [ "$test" != "" ]
-#do
-#    i=$((i+1))
-#    j=$((j+1))
-#    test=$($j echo -e "${variable// -/\n-}")
-#    echo $test
-##    test=$(echo "$variable" | cut -d" -" -f"$i")
-##    if [ "$test" == *"-" ]; then
-##        printf "\n$j - $test"
-##    fi
-#done
-#
-#    printf "\nChoix : "
-#    read choise
-#        case $choise in
-#            q)  choise="" menu;;
-#            *)  choise="" clear;;
-#        esac
 
 
     }
