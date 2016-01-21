@@ -1,3 +1,7 @@
+![ATB](https://raw.githubusercontent.com/AdminToolsBox/ATB/master/img/toolbox.png  "ATB") AdminToolsBox (ATB)
+---------------
+
+
 I. Introduction
 ---------------
 
@@ -44,12 +48,12 @@ IV. Recommended modules
 
 
 V. Documentation
- -----------------
+------------------
 	Doxygen file and man page included. 
 	More information in the instalation guide. 
 
 VI. Settings
- ----------
+------------------
     ATB.conf		File with user preferences (language / gui enable or not)
 
 
@@ -57,3 +61,6 @@ VII. Maintainers
 ------------------
 
     This program is edited by Alec Beaudroux, Florian Beaulieu, William Le Pommelet and William Misson
+
+Last update : jeudi, 21. janvier 2016 05:08 
+
