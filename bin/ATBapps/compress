@@ -1,10 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
 printf "Quel fichier voulez vous compresser ?\n"
-read fil
-printf "Où voulez vous obtenir votre fichier ?\n"
+ls
+read afile
+printf "Où voulez vous obtenir votre fichier ? Home par default\n"
 read destination
+if [ destination = "" ] ; then
+destination=$(echo $HOME)
+fi
+printf "Vous avez choisi de mettre votre archive dans : $destination \n"
 printf "Nom de l'archive : \n"
 read nom
 destination = destination+=nom+=".gz"
-tar zcvf $destination $fil
+
+#printf "Voulez vous garder le fichier source ?" 
+
+
+
+tarzcvf $destination $afile
