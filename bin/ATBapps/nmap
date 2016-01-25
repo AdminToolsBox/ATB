@@ -723,7 +723,7 @@ case $choise in
     printf "Votre commande : $variable\n\n"
 
     printf "############### MODIFIER MANUELLEMENT COMMANDE ###############\n\n"
-    printf "# - Entrez le numéro de l'option à supprimer\nq - RETOUR\n\n"
+    printf "Entrez le numéro de l'option à supprimer\n\n"
 
     i="2"
     j="0"
@@ -760,21 +760,35 @@ case $choise in
                         fi
                     j=$((j+1))
                     printf "$j - $commande\n"
+                    tableau["$j"]="$commande"
                 fi
             done
         fi
-    printf "\nChoix : "
+    printf "q - RETOUR"
+    printf "\n\nChoix : "
     read choise
     }
 
     while [ "$choise" != "Q" ]
     do
     menu_case12
-
         case $choise in
-            1)  choise="" echo "blabl";;
-            q)  choise="" menu;;
-            *)  choise="" clear;;
+            [1-"$j"])
+                        i="1"
+                        variable="nmap"
+                        while [ "$i" -le "$j" ]
+                        do
+                            if [ "$i" != "$choise" ]; then
+                                variable+=" ${tableau["$i"]}"
+                                i=$((i+1))
+                            else
+                                i=$((i+1))
+                            fi
+                        done
+                        menu_case12
+                        ;;
+            q)          choise="" menu;;
+            *)          choise="" clear;;
         esac
     done
     ;;
