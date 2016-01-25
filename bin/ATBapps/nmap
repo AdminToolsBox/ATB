@@ -64,7 +64,7 @@ printf "Hôte : "
 read hote
     if [ -n "$hote" ];then
         variable+=" $1 $hote"
-        printf "Souhaitez vous ajouter un autre hôte ? (y/N)"
+        printf "Souhaitez vous ajouter un autre hôte ? (y/N) : "
         read autre
             while [ "$autre" = "y" ]
             do
@@ -95,7 +95,7 @@ printf "Port : "
 read port
     if [ -n "$port" ];then
         variable+=" $port"
-        printf "Souhaitez vous ajouter un autre port ? (y/N)"
+        printf "Souhaitez vous ajouter un autre port ? (y/N) : "
         read autre
             while [ "$autre" = "y" ]
             do
@@ -173,7 +173,7 @@ read choise
             read port
                 if [ -n "$port" ];then
                     variable+=" $port"
-                    printf "Souhaitez vous ajouter un autre port ? (y/N)"
+                    printf "Souhaitez vous ajouter un autre port ? (y/N) : "
                     read autre
                     while [ "$autre" = "y" ]
                     do
@@ -726,51 +726,56 @@ case $choise in
     printf "# - Entrez le numéro de l'option à supprimer\nq - RETOUR\n\n"
 
     i="2"
-    j="1"
+    j="0"
     option=""
     test="$variable"
     nb_mots="$(echo "$variable" | wc -w | sed 's/^[ \t]*//')"
 
-while [ -n "$test" ]
-do
-    if [[ "$test" = "nmap" || "$test" = "" ]]; then
-        printf "Erreur, vous n'avez pas renseigné d'option.\nAppuyez sur une touche pour retourner au menu principal...\n"
-        read touche
-            if [ "$touche" != * ]; then
-                exit
-            fi
-        menu
-    elif [ -n "$test" ]; then
+        if [[ "$test" = "nmap" || "$test" = "" ]]; then
+            printf "Erreur, vous n'avez pas renseigné d'option.\nAppuyez sur une touche pour retourner au menu principal...\n"
+            read touche
+                if [ "$touche" != * ]; then
+                    exit
+                fi
+            menu
+        elif [ -n "$test" ]; then
 
-        while [ "$i" -le "$nb_mots" ]
-        do
-            PremierCarChaine="$(echo $test | cut -d" " -f"$i" | cut -c-1)"
-
-            echo "$PremierCarChaine"
-
-#            if [ echo "$(echo "$(echo $test | cut -d" " -f"$i"):0:1")" -eq "-" ]; then
-#                echo "$j - coucou $i\n"
-#            fi
-                i=$((i+1))
-                j=$((j+1))
-
-        done
-
-    fi
-done
-
-printf "fin boucle"
-read d
-
-
-
-
+            while [ "$i" -le "$nb_mots" ]
+            do
+                PremierCarChaine="$(echo $test | cut -d" " -f"$i" | cut -c-1)"
+                if [[ "$PremierCarChaine" = "-" && "$i" -le "$nb_mots" ]]; then
+                    commande="$(echo $test | cut -d" " -f"$i")"
+                    i=$((i+1))
+                    PremierCarChaine="$(echo $test | cut -d" " -f"$i" | cut -c-1)"
+                        if [[ "$PremierCarChaine" != "-" && "$i" -le "$nb_mots" ]]; then
+                            while [ "$PremierCarChaine" != "-" ]
+                            do
+                                commande+=" $(echo $test | cut -d" " -f"$i")"
+                                i=$((i+1))
+                                PremierCarChaine="$(echo $test | cut -d" " -f"$i" | cut -c-1)"
+                                    if [ "$i" -gt "$nb_mots" ]; then
+                                        PremierCarChaine="-"
+                                    fi
+                            done
+                        fi
+                    j=$((j+1))
+                    printf "$j - $commande\n"
+                fi
+            done
+        fi
+    printf "\nChoix : "
+    read choise
     }
 
     while [ "$choise" != "Q" ]
     do
-        choise=""
-        menu_case12
+    menu_case12
+
+        case $choise in
+            1)  choise="" echo "blabl";;
+            q)  choise="" menu;;
+            *)  choise="" clear;;
+        esac
     done
     ;;
 
