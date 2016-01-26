@@ -785,7 +785,6 @@ case $choise in
                                 i=$((i+1))
                             fi
                         done
-                        menu_case12
                         ;;
             q)          choise="" menu;;
             *)          choise="" clear;;
