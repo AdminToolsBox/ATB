@@ -38,7 +38,7 @@ read fichier
             fi
     fi
 fichier=""
-choise=""
+choice=""
 touche=""
 }
 
@@ -68,7 +68,7 @@ read nombre
             fi
     fi
 nombre=""
-choise=""
+choice=""
 touche=""
 }
 ###############
@@ -102,7 +102,7 @@ read hote
     fi
 hote=""
 autre=""
-choise=""
+choice=""
 touche=""
 }
 
@@ -123,7 +123,7 @@ read hoteport
     fi
 hoteport=""
 autre=""
-choise=""
+choice=""
 touche=""
 }
 
@@ -143,7 +143,7 @@ read option
             fi
     fi
 option=""
-choise=""
+choice=""
 touche=""
 }
 
@@ -151,12 +151,12 @@ touche=""
 
 fonction_choix()
 {
-choise=""
+choice=""
 sauvegarde="$variable"
 printf "\nChoix : "
-read choise
-    if [[ "$choise" -le "$#" && -n "$choise" ]];then
-        variable+=" ${!choise}"
+read choice
+    if [[ "$choice" -le "$#" && -n "$choice" ]];then
+        variable+=" ${!choice}"
         if [ "$renseigneport" = "y" ];then
             printf "Port : "
             read port
@@ -185,18 +185,18 @@ read choise
                         fi
                 fi
         elif [ "$renseigneport" = "o" ];then
-            choise=""
+            choice=""
             printf "Souhaitez vous entrer un numéro de port ? (y/N) : "
-            read choise
-            fonction_yesno "$choise"
-            choise="$yesno"
-                if [ "$choise" = "y" ];then
+            read choice
+            fonction_yesno "$choice"
+            choice="$yesno"
+                if [ "$choice" = "y" ];then
                     printf "Port : "
                     read port
                     variable+=" $port"
-                    choise=""
+                    choice=""
                     port=""
-                elif [[ "$choise" = "n" || "$choise" = "N" || -z "$choise" ]];then
+                elif [[ "$choice" = "n" || "$choice" = "N" || -z "$choice" ]];then
                     variable+=""
                 else
                     variable="$sauvegarde"
@@ -240,17 +240,17 @@ read choise
                         fi
                 fi
             fichier=""
-            choise=""
+            choice=""
             touche=""
         fi
-    elif [ -z "$choise" ];then
+    elif [ -z "$choice" ];then
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
             fi
     else
-        printf "Le choix $choise n'existe pas, appuyez sur une touche pour recommencer...\n"
+        printf "Le choix $choice n'existe pas, appuyez sur une touche pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -263,7 +263,7 @@ touche=""
 renseigneport=""
 renseignenombre=""
 renseignefichier=""
-choise=""
+choice=""
 touche=""
 sauvegarde=""
 }
@@ -283,7 +283,7 @@ read entree
     fi
 entree=""
 espace=""
-choise=""
+choice=""
 }
 
 #########################################
@@ -293,14 +293,14 @@ variable="nmap"
 menu()
 {
 clear;
-choise=""
+choice=""
 printf "Votre commande : $variable\n\n"
 printf "Ce programme vous accompagne dans l'utilisation de la commande nmap.\n(Entrez \"q\" pour quiter le programme).\nQue souhaitez-vous faire ?\n"
 printf "\n############### MENU ###############\n"
 printf "\n 1 - SPÉCIFICATIONS DES CIBLES \n 2 - DÉCOUVERTE DES HÔTES \n 3 - TECHNIQUES DE SCAN \n 4 - SPÉCIFICATIONS DES PORTS ET ORDRE DE SCAN \n 5 - DÉTECTION DE SERVICE/VERSION \n 6 - SCRIPT SCAN \n 7 - DÉTECTION DE SYSTÈME D'EXPLOITATION \n 8 - TEMPORISATION ET PERFORMANCE \n 9 - ÉVASION PARE-FEU/IDS ET USURPATION D'IDENTITÉ \n10 - SORTIE \n11 - DIVERS \n12 - MODIFIER MANUELLEMENT COMMANDE \n q - QUITER PROGRAMME\n"
 printf "\nChoix : "
-read choise
-case $choise in
+read choice
+case $choice in
 
     1)
     ############### SPÉCIFICATIONS DES CIBLES ###############
@@ -313,19 +313,19 @@ case $choise in
         printf "Les cibles peuvent être spécifiées par des noms d'hôtes, des adresses IP, des adresses de réseaux, etc. \nExemple: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0-255.0-255.1-254"
         printf "\n\n1 - -iL <inputfilename>: Lit la liste des hôtes/réseaux cibles à partir du fichier \n2 - -iR <num hosts>: Choisit les cibles au hasard (0 pour infini) \n3 - --exclude <host1[,host2],host3],...>: Exclut des hôtes/réseaux du scan \n4 - --excludefile <exclude_file>: Exclut des hôtes/réseaux des cibles à partir du fichier \nq - RETOUR\n"
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case1
-            case $choise in
-                1)  choise="" fonction_fichier "-iL";;
-                2)  choise="" fonction_nombre "-iR";;
-                3)  choise="" fonction_repetehost "--exclude";;
-                4)  choise="" fonction_fichier "-iR";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+            case $choice in
+                1)  choice="" fonction_fichier "-iL";;
+                2)  choice="" fonction_nombre "-iR";;
+                3)  choice="" fonction_repetehost "--exclude";;
+                4)  choice="" fonction_fichier "-iR";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
             esac
         done
     ;;
@@ -341,30 +341,30 @@ case $choise in
         printf "1 - -sL: List Scan - Liste simplement les cibles à scanner \n2 - -sP: Ping Scan - Ne fait que déterminer si les hôtes sont en ligne \n3 - -P0: Considère que tous les hôtes sont en ligne -- évite la découverte des hôtes \n4 - -PN: Considérer tous les hôtes comme étant connectés -- saute l'étape de découverte des hôtes \n5 - -PS/PA/PU [portlist]: Découverte TCP SYN/ACK ou UDP des ports en paramètre \n6 - -PE/PP/PM: Découverte de type requête ICMP echo, timestamp ou netmask \n7 - -PO [num de protocole]: Ping IP (par type) \n8 - -n/-R: Ne jamais résoudre les noms DNS/Toujours résoudre [résout les cibles actives par défaut] \n9 - --dns-servers <serv1[,serv2],...>: Spécifier des serveurs DNS particuliers \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case2
-            case $choise in
-                1)  choise="" variable+=" -sL";;
-                2)  choise="" variable+=" -sP";;
-                3)  choise="" variable+=" -P0";;
-                4)  choise="" variable+=" -PN";;
-                5)  choise="" printf "\n1 - -PS [portlist]: Découverte TCP SYN des ports en paramètre\n2 - -PA [portlist]: Découverte TCP ACK des ports en paramètre\n3 - -PU [portlist]: Découverte TCP UDP des ports en paramètre\n"
+            case $choice in
+                1)  choice="" variable+=" -sL";;
+                2)  choice="" variable+=" -sP";;
+                3)  choice="" variable+=" -P0";;
+                4)  choice="" variable+=" -PN";;
+                5)  choice="" printf "\n1 - -PS [portlist]: Découverte TCP SYN des ports en paramètre\n2 - -PA [portlist]: Découverte TCP ACK des ports en paramètre\n3 - -PU [portlist]: Découverte TCP UDP des ports en paramètre\n"
                     renseigneport="o"
                     fonction_choix "-PS" "-PA" "-PU";;
-                6)  choise="" printf "\n1 - -PE: Découverte de type requête ICMP echo\n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
+                6)  choice="" printf "\n1 - -PE: Découverte de type requête ICMP echo\n2 - -PP: Découverte de type requête ICMP timestamp\n3 - -PM: Découverte de type requête ICMP netmask\n"
                     fonction_choix "-PE" "-PP" "-PM";;
-                7)  choise=""
+                7)  choice=""
                     entree="Entrez une adresse IP : "
                     fonction_ecriture "-PO" "$entree";;
-                8)  choise="" printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
+                8)  choice="" printf "\n1 - -n: Ne jamais résoudre les noms DNS \n2 - -R: Toujours résoudre [résout les cibles actives par défaut]\n"
                     fonction_choix "-n" "-R";;
-                9)  choise="" fonction_repetehost "--dns-servers";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+                9)  choice="" fonction_repetehost "--dns-servers";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
             esac
         done
     ;;
@@ -379,31 +379,31 @@ case $choise in
         printf "############### DÉCOUVERTE DES HÔTES ###############\n\n"
         printf "1 - -sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon \n2 - -sN/sF/sX: Scans TCP Null, FIN et Xmas \n3 - -sU: Scan UDP \n4 - --scanflags <flags>: Personnalise les flags des scans TCP \n5 - -sI <zombie host[:probeport]>: Idlescan (scan passif) \n6 - -sO: Scan des protocoles supportés par la couche IP \n7 - -b <ftp relay host>: Scan par rebond FTP \n8 - --traceroute: Détermine une route vers chaque hôte \n9 - --reason: Donne la raison pour laquelle tel port apparait à tel état \nq - RETOUR\n"
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case3
-            case $choise in
-                1)  choise="" printf "\n1 - -sS: Scans TCP SYN\n2 - -sT: Scans TCP Connect()\n3 - -sA: Scans TCP ACK\n4 - -sW: Scans TCP Window\n5 - -sM: Scans TCP Maimon\n"
+            case $choice in
+                1)  choice="" printf "\n1 - -sS: Scans TCP SYN\n2 - -sT: Scans TCP Connect()\n3 - -sA: Scans TCP ACK\n4 - -sW: Scans TCP Window\n5 - -sM: Scans TCP Maimon\n"
                     fonction_choix "-sS" "-sT" "-sA" "-sW" "-sM";;
-                2)  choise="" printf "\n1 - -sN: Scans TCP Null\n2 - -sF: Scans TCP FIN\n3 - -sX: Scans TCP Xmas\n"
+                2)  choice="" printf "\n1 - -sN: Scans TCP Null\n2 - -sF: Scans TCP FIN\n3 - -sX: Scans TCP Xmas\n"
                     fonction_choix "-sN" "-sF" "-sX";;
-                3)  choise="" variable+=" -sU";;
-                4)  choise=""
+                3)  choice="" variable+=" -sU";;
+                4)  choice=""
                     entree="Entrez un flag : "
                     fonction_ecriture "--scanflags" "$entree";;
-                5)  choise=""
+                5)  choice=""
                     fonction_hostport "-sI";;
-                6)  choise="" variable+=" -sO";;
-                7)  choise=""
+                6)  choice="" variable+=" -sO";;
+                7)  choice=""
                     entree="Entrez un relay FTP : "
                     fonction_ecriture "-b" "$entree";;
-                8)  choise="" variable+=" --traceroute";;
-                9)  choise="" variable+=" --reason";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+                8)  choice="" variable+=" --traceroute";;
+                9)  choice="" variable+=" --reason";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -420,20 +420,20 @@ case $choise in
         printf "1 - -p <plage de ports>: Ne scanne que les ports spécifiés \n2 - -F: Fast - Ne scanne que les ports listés dans le fichier nmap-services \n3 - -r: Scan séquentiel des ports, ne mélange pas leur ordre \n4 - --top-ports <nombre>: Scan <nombre> de ports parmis les plus courants \n5 - --port-ratio <ratio>: Scan <ratio> pourcent des ports les plus courants \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case4
-            case $choise in
-                1)  choise="" fonction_plageport;;
-                2)  choise="" variable+=" -F";;
-                3)  choise="" variable+=" -r";;
-                4)  choise="" fonction_nombre "--top-ports";;
-                5)  choise="" fonction_nombre "--port-ratio" "Ratio";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+            case $choice in
+                1)  choice="" fonction_plageport;;
+                2)  choice="" variable+=" -F";;
+                3)  choice="" variable+=" -r";;
+                4)  choice="" fonction_nombre "--top-ports";;
+                5)  choice="" fonction_nombre "--port-ratio" "Ratio";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -450,20 +450,20 @@ case $choise in
         printf "1 - -sV: Teste les ports ouverts pour déterminer le service en écoute et sa version \n2 - --version-light: Limite les tests aux plus probables pour une identification plus rapide \n3 - --version-intensity <niveau>: De 0 (léger) à 9 (tout essayer) \n4 - --version-all: Essaie un à un tous les tests possibles pour la détection des versions \n5 - --version-trace: Affiche des informations détaillées du scan de versions (pour débogage) \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case5
-            case $choise in
-                1)  choise="" variable+=" -sV";;
-                2)  choise="" variable+=" --version-light";;
-                3)  choise="" fonction_nombre "--version-intensity" "Niveau (de 0 à 9)";;
-                4)  choise="" variable+=" --version-all";;
-                5)  choise="" variable+=" --version-trace";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+            case $choice in
+                1)  choice="" variable+=" -sV";;
+                2)  choice="" variable+=" --version-light";;
+                3)  choice="" fonction_nombre "--version-intensity" "Niveau (de 0 à 9)";;
+                4)  choice="" variable+=" --version-all";;
+                5)  choice="" variable+=" --version-trace";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -480,20 +480,20 @@ case $choise in
         printf "1 - -sC: équivalent de --script=safe,intrusive \n2 - --script=<lua scripts>: <lua scripts> est une liste de répertoires ou de scripts séparés par des virgules \n3 - --script-args=<n1=v1,[n2=v2,...]>: passer des arguments aux scripts \n4 - --script-trace: Montre toutes les données envoyées ou recues \n5 - --script-updatedb: Met à jour la base de données des scripts. Seulement fait si -sC ou --script a été aussi donné. \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case6
-            case $choise in
-                1)  choise="" variable+=" -sC";;
-                2)  choise="" espace="n" fonction_ecriture "--script=" "Entrez une liste de répertoires ou de scripts séparés par des virgules :\n";;
-                3)  choise="" espace="n" fonction_ecriture "--script=" "Passer des arguments aux scripts suivant l'exemple <n1=v1,[n2=v2,...]> : \n";;
-                4)  choise="" variable+=" --script-trace";;
-                5)  choise="" variable+=" --script-updatedb";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+            case $choice in
+                1)  choice="" variable+=" -sC";;
+                2)  choice="" espace="n" fonction_ecriture "--script=" "Entrez une liste de répertoires ou de scripts séparés par des virgules :\n";;
+                3)  choice="" espace="n" fonction_ecriture "--script=" "Passer des arguments aux scripts suivant l'exemple <n1=v1,[n2=v2,...]> : \n";;
+                4)  choice="" variable+=" --script-trace";;
+                5)  choice="" variable+=" --script-updatedb";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -510,18 +510,18 @@ case $choise in
         printf "1 - -O: Active la détection d'OS \n2 - --osscan-limit: Limite la détection aux cibles prométeuses \n3 - --osscan-guess: Détecte/Devine l'OS de façon plus agressive \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case7
-            case $choise in
-                1)  choise="" variable+=" -O";;
-                2)  choise="" variable+=" --osscan-limit";;
-                3)  choise="" variable+=" --osscan-guess";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+            case $choice in
+                1)  choice="" variable+=" -O";;
+                2)  choice="" variable+=" --osscan-limit";;
+                3)  choice="" variable+=" --osscan-guess";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -539,32 +539,32 @@ case $choise in
         printf "1 - -T[0-5]: Choisit une politique de temporisation (plus élevée, plus rapide) \n2 - --min-hostgroup/max-hostgroup <msec>: Tailles des groupes d'hôtes à scanner en parallèle \n3 - --min-parallelism/max-parallelism <msec>: Parallélisation des paquets de tests (probes) \n4 - --min-rtt-timeout/max-rtt-timeout/initial-rtt-timeout <msec>: Spécifie le temps d'aller-retour des paquets de tests \n5 - --max-retries <tries>: Nombre de retransmissions des paquets de tests des scans de ports \n6 - --host-timeout <msec>: Délai d'expiration du scan d'un hôte \n7 - --scan-delay/--max_scan-delay <msec>: Ajuste le délai de retransmission entre deux paquets de tests \n8 - --min-rate <nombre>: Envoyer au minimum <nombre> paquets par seconde \n9 - --max-rate <nombre>: Envoyer au maximum <nombre> paquets par seconde \nq - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case8
-            case $choise in
-                1)  choise="" fonction_nombre "-T" "Temporisation [0-5]";;
-                2)  choise="" printf "\n1 - --min-hostgroup <msec>\n2 - --max-hostgroup <msec>\n"
+            case $choice in
+                1)  choice="" fonction_nombre "-T" "Temporisation [0-5]";;
+                2)  choice="" printf "\n1 - --min-hostgroup <msec>\n2 - --max-hostgroup <msec>\n"
                     renseignenombre="y"
                     fonction_choix "--min-hostgroup" "--max-hostgroup";;
-                3)  choise="" printf "\n1 - --min-parallelism <msec>\n2 - --max-parallelism <msec>\n"
+                3)  choice="" printf "\n1 - --min-parallelism <msec>\n2 - --max-parallelism <msec>\n"
                     renseignenombre="y"
                     fonction_choix "--min-parallelism" "--max-parallelism";;
-                4)  choise="" printf "\n1 - --min-rtt-timeout <msec>\n2 - --max-rtt-timeout <msec>\n3 - --initial-rtt-timeout <msec>\n"
+                4)  choice="" printf "\n1 - --min-rtt-timeout <msec>\n2 - --max-rtt-timeout <msec>\n3 - --initial-rtt-timeout <msec>\n"
                     renseignenombre="y"
                     fonction_choix "--min-rtt-timeout" "--max-rtt-timeout" "--initial-rtt-timeout";;
-                5)  choise="" fonction_nombre "--max-retries" "Nombre d'essais";;
-                6)  choise="" fonction_nombre "--host-timeout" "Délai d'expiration";;
-                7)  choise="" printf "\n1 - --scan-delay <msec>\n2 - --max_scan-delay <msec>\n"
+                5)  choice="" fonction_nombre "--max-retries" "Nombre d'essais";;
+                6)  choice="" fonction_nombre "--host-timeout" "Délai d'expiration";;
+                7)  choice="" printf "\n1 - --scan-delay <msec>\n2 - --max_scan-delay <msec>\n"
                     renseignenombre="y"
                     fonction_choix "--scan-delay" "--max_scan-delay";;
-                8)  choise="" fonction_nombre "--min-rate";;
-                9)  choise="" fonction_nombre "--max-rate";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+                8)  choice="" fonction_nombre "--min-rate";;
+                9)  choice="" fonction_nombre "--max-rate";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -581,20 +581,20 @@ case $choise in
         printf " 1 - -f; --mtu <val>: Fragmente les paquets (en spécifiant éventuellement la MTU) \n 2 - -D <decoy1,decoy2[,ME],...>: Obscurci le scan avec des leurres \n 3 - -S <IP_Address>: Usurpe l'adresse source \n 4 - -e <iface>: Utilise l'interface réseau spécifiée \n 5 - -g/--source-port <portnum>: Utilise le numéro de port comme source \n 6 - --data-length <num>: Ajoute des données au hasard aux paquets émis \n 7 - --ip-options <options>: Envoi des paquets avec les options IP spécifiées \n 8 - --ttl <val>: Spécifie le champ time-to-live IP \n 9 - --spoof-mac <adresse MAC, préfixe ou nom du fabriquant>: Usurpe une adresse MAC \n10 - --badsum: Envoi des paquets TCP/UDP avec une somme de controle erronnée \n q - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case9
-            case $choise in
-                1)  choise=""
+            case $choice in
+                1)  choice=""
                     variable+=" -f"
                     printf "\nVoulez-vous spécifier la MTU ? (y/N) : "
-                    read choise
-                    fonction_yesno "$choise"
-                    choise="$yesno"
-                        if [ $choise = "y" ];then
+                    read choice
+                    fonction_yesno "$choice"
+                    choice="$yesno"
+                        if [ $choice = "y" ];then
                             printf "Valeur : "
                             read valeur
                                 if [ -n "$valeur" ];then
@@ -602,30 +602,30 @@ case $choise in
                                 fi
                             valeur=""
                         fi
-                    choise="";;
-                2)  choise=""
+                    choice="";;
+                2)  choice=""
                     entree="\nRenseignez les leurres suivant l'exemple <decoy1,decoy2[,ME],...> : \n"
                     fonction_ecriture "-D" "$entree";;
-                3)  choise=""
+                3)  choice=""
                     entree="\nEntrez l'adresse IP source : "
                     fonction_ecriture "-S" "$entree";;
-                4)  choise=""
+                4)  choice=""
                     entree="\nEntrez l'interface réseau : "
                     fonction_ecriture "-e" "$entree";;
-                5)  choise="" printf "\n1 - -g <portnum>\n2 - --source-port <portnum>\n"
+                5)  choice="" printf "\n1 - -g <portnum>\n2 - --source-port <portnum>\n"
                     renseigneport="y"
                     fonction_choix "-g" "--source-port";;
-                6)  choise="" fonction_nombre "--data-length";;
-                7)  choise=""
+                6)  choice="" fonction_nombre "--data-length";;
+                7)  choice=""
                     entree="\nEntrez des options IP : "
                     fonction_ecriture "--ip-options" "$entree";;
-                8)  choise="" fonction_nombre "--ttl" "Valeur";;
-                9)  choise=""
+                8)  choice="" fonction_nombre "--ttl" "Valeur";;
+                9)  choice=""
                     entree="\nEntrez une adresse MAC, un préfixe ou le nom du fabriquant : "
                     fonction_ecriture "--spoof-mac" "$entree";;
-                10) choise="" variable+=" --badsum";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+                10) choice="" variable+=" --badsum";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -642,36 +642,36 @@ case $choise in
         printf " 1 - -oN/-oX/-oS/-oG <file>: Sortie dans le fichier en paramètre des résultats du scan au format normal, XML, s|<rIpt kIddi3 et format Grepable \n 2 - -oA <basename>: Sortie dans les trois formats majeurs en même temps \n 3 - -v: Rend Nmap plus verbeux (-vv pour plus d'effet) \n 4 - -d: Mode debuggage (-dd pour plus d'effet) \n 5 - --packet-trace: Affiche tous les paquets émis et reçus \n 6 - --iflist: Affiche les interfaces et les routes de l'hôte (pour débogage) \n 7 - --log-errors: Journalise les erreurs/alertes dans un fichier au format normal \n 8 - --append-output: Ajoute la sortie au fichier plutôt que de l'écraser \n 9 - --resume <filename>: Reprend un scan interrompu \n10 - --stylesheet <path/URL>: Feuille de styles XSL pour transformer la sortie XML en HTML \n11 - --webxml: Feuille de styles de références de Insecure.Org pour un XML plus portable \n12 - --no_stylesheet: Nmap n'associe pas la feuille de styles XSL à la sortie XML \n q - RETOUR\n"
 
         printf "\nChoix : "
-        read choise
+        read choice
         }
 
-        while [ "$choise" != "Q" ]
+        while [ "$choice" != "Q" ]
         do
         menu_case10
-            case $choise in
-                1)  choise=""
+            case $choice in
+                1)  choice=""
                     renseignefichier="y"
                     printf "\n1 - -oN: Sortie au format normal\n2 - -oX: Sortie au format XML\n3 - -oS: Sortie au format s|<rIpt kIddi3\n4 - -oG: Sortie au format Grepable\n"
                     fonction_choix "-oN" "-oX" "-oS" "-oG";;
-                2)  choise=""
+                2)  choice=""
                     entree="\nEntrez un nom : "
                     fonction_ecriture "-oA" "$entree";;
-                3)  choise="" printf "\n1 - -v\n2 - -vv (plus d'effet)\n"
+                3)  choice="" printf "\n1 - -v\n2 - -vv (plus d'effet)\n"
                     fonction_choix "-v" "-vv";;
-                4)  choise="" printf "\n1 - -d\n2 - -dd (plus d'effet)\n"
+                4)  choice="" printf "\n1 - -d\n2 - -dd (plus d'effet)\n"
                     fonction_choix "-d" "-dd";;
-                5)  choise="" variable+=" --packet-trace";;
-                6)  choise="" variable+=" --iflist";;
-                7)  choise="" variable+=" --log-errors";;
-                8)  choise="" variable+=" --append-output";;
-                9)  choise="" fonction_fichier "--resume";;
-                10) choise=""
+                5)  choice="" variable+=" --packet-trace";;
+                6)  choice="" variable+=" --iflist";;
+                7)  choice="" variable+=" --log-errors";;
+                8)  choice="" variable+=" --append-output";;
+                9)  choice="" fonction_fichier "--resume";;
+                10) choice=""
                     entree="\nEntrez le chemin d'un fichier ou un URL : "
                     fonction_ecriture "--stylesheet" "$entree";;
-                11) choise="" variable+=" --webxml";;
-                12) choise="" variable+=" --no_stylesheet";;
-                q)  choise="" menu;;
-                *)  choise="" clear;;
+                11) choice="" variable+=" --webxml";;
+                12) choice="" variable+=" --no_stylesheet";;
+                q|Q)  choice="" menu;;
+                *)  choice="" clear;;
 
             esac
         done
@@ -687,27 +687,27 @@ case $choise in
     printf "############### DIVERS ###############\n\n"
     printf "1 - -6: Active le scan IPv6 \n2 - -A: Active la détection du système d'exploitation et des versions \n3 - --datadir <dirname>: Spécifie un dossier pour les fichiers de données de Nmap \n4 - --send-eth/--send-ip: Envoie des paquets en utilisant des trames Ethernet ou des paquets IP bruts \n5 - --privileged: Suppose que l'utilisateur est entièrement privilégié \n6 - -V: Affiche le numéro de version \n7 - --unprivileged: Suppose que l'utilisateur n'a pas les privilèges d'usage des raw socket \n8 - -h: Affiche ce résumé de l'aide\nq - RETOUR\n"
     printf "\nChoix : "
-    read choise
+    read choice
     }
 
-    while [ "$choise" != "Q" ]
+    while [ "$choice" != "Q" ]
     do
     menu_case11
-        case $choise in
-            1)  choise="" variable+=" -6";;
-            2)  choise="" variable+=" -A";;
-            3)  choise=""
+        case $choice in
+            1)  choice="" variable+=" -6";;
+            2)  choice="" variable+=" -A";;
+            3)  choice=""
                 entree="\nEntrez un dossier pour les fichiers de données de Nmap : "
                 fonction_ecriture "--datadir" "$entree";;
-            4)  choise=""
+            4)  choice=""
                 printf "\n1 - --send-eth: Envoie des paquets en utilisant des trames Ethernet \n2 - --send-ip: Envoie des paquets en utilisant des paquets IP bruts\n"
                 fonction_choix "--send-eth" "--send-ip";;
-            5)  choise="" variable+=" --privileged";;
-            6)  choise="" variable+=" -V";;
-            7)  choise="" variable+=" --unprivileged";;
-            8)  choise="" variable+=" -h";;
-            q)  choise="" menu;;
-            *)  choise="" clear;;
+            5)  choice="" variable+=" --privileged";;
+            6)  choice="" variable+=" -V";;
+            7)  choice="" variable+=" --unprivileged";;
+            8)  choice="" variable+=" -h";;
+            q|Q)  choice="" menu;;
+            *)  choice="" clear;;
         esac
     done
     ;;
@@ -763,19 +763,19 @@ case $choise in
         fi
     printf "q - RETOUR"
     printf "\n\nChoix : "
-    read choise
+    read choice
     }
 
-    while [ "$choise" != "Q" ]
+    while [ "$choice" != "Q" ]
     do
     menu_case12
-        case $choise in
+        case $choice in
             [1-"$j"])
                         i="1"
                         variable="nmap"
                         while [ "$i" -le "$j" ]
                         do
-                            if [ "$i" != "$choise" ]; then
+                            if [ "$i" != "$choice" ]; then
                                 variable+=" ${tableau["$i"]}"
                                 i=$((i+1))
                             else
@@ -783,16 +783,16 @@ case $choise in
                             fi
                         done
                         ;;
-            q)          choise="" menu;;
-            *)          choise="" clear;;
+            q|Q)          choice="" menu;;
+            *)          choice="" clear;;
         esac
     done
     ;;
 
-    q)  choise="" exit 0;;
-    *)	choise="" menu;;
+    q|Q)  choice="" exit 0;;
+    *)	choice="" menu;;
 esac
 }
 
-choise=""
+choice=""
 menu
