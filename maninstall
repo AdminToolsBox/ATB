@@ -5,7 +5,7 @@ user=$(whoami)
 	case "$user" in  
   
 		root)
-			printf "Which language will be used in the manual ?" 
+			printf "Which language will be used in the manual ?\n" 
 			printf "1 - English \n2 - French - Français\n"			
 			read language 			
 			case "$language" in
@@ -15,7 +15,7 @@ user=$(whoami)
 					exit 0
 				;;
 				
-				2|fr|french)
+				2|fr|french|français)
 					tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
 					printf "Le manuel a bien été installé en Français.\n"
 					exit 0
@@ -29,8 +29,9 @@ user=$(whoami)
 				
 			esac	
 		;;
-		*)	echo "This script need root permision, please run it like that :"
-			echo "sudo $0 $*"
+		*)	printf "This script need root permision, please run : "
+			echo "\033[1;31;40m sudo $0 $* \033[0m"		
+		
 		;;
 
 	esac
