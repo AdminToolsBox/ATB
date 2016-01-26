@@ -2,6 +2,22 @@
 
 ############### FONCTIONS ###############
 
+fonction_yesno()
+{
+    yesno="$1"
+        if [[ "$yesno" = "y" || "$yesno" = "Y" || "$yesno" = "yes" || "$yesno" = "Yes" || "$yesno" = "YES" || "$yesno" = "o" || "$yesno" = "O" || "$yesno" = "oui" || "$yesno" = "Oui" || "$yesno" = "OUI" ]]; then
+            yesno="y"
+        elif [[ "$yesno" = "n" || "$yesno" = "N" || "$yesno" = "no" || "$yesno" = "No" || "$yesno" = "NO" || "$yesno" = "non" || "$yesno" = "Non" || "$yesno" = "NON" ]]; then
+            yesno="n"
+        else
+            printf "Erreur, entrez (y/N) : "
+            read yesno
+            fonction_yesno "$yesno"
+        fi
+}
+
+###############
+
 fonction_fichier()
 {
 printf "Chemin d'accès du fichier : "
@@ -55,7 +71,6 @@ nombre=""
 choise=""
 touche=""
 }
-
 ###############
 
 fonction_repetehost()
@@ -66,14 +81,18 @@ read hote
         variable+=" $1 $hote"
         printf "Souhaitez vous ajouter un autre hôte ? (y/N) : "
         read autre
-            while [ "$autre" = "y" ]
-            do
-                printf "Hôte : "
-                read hote
-                variable+=", $hote"
-                printf "Souhaitez vous ajouter un autre hôte ? (y/N) : "
-                read autre
-            done
+        fonction_yesno "$autre"
+        autre="$yesno"
+                while [ "$autre" = "y" ]
+                do
+                    printf "Hôte : "
+                    read hote
+                    variable+=", $hote"
+                    printf "Souhaitez vous ajouter un autre hôte ? (y/N) : "
+                    read autre
+                    fonction_yesno "$autre"
+                    autre="$yesno"
+                done
     else
         printf "Erreur, appuyez sur une touche pour recommencer...\n"
         read touche
@@ -85,36 +104,6 @@ hote=""
 autre=""
 choise=""
 touche=""
-}
-
-###############
-
-fonction_repeteport()
-{
-printf "Port : "
-read port
-    if [ -n "$port" ];then
-        variable+=" $port"
-        printf "Souhaitez vous ajouter un autre port ? (y/N) : "
-        read autre
-            while [ "$autre" = "y" ]
-            do
-                printf "Port : "
-                read port
-                variable+=" $port"
-                printf "Souhaitez vous ajouter un autre port ? (y/N) : "
-                read autre
-            done
-    else
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
-        read touche
-            if [ "$touche" != * ];then
-                exit
-            fi
-    fi
-port=""
-autre=""
-choise=""
 }
 
 ###############
@@ -175,13 +164,17 @@ read choise
                     variable+=" $port"
                     printf "Souhaitez vous ajouter un autre port ? (y/N) : "
                     read autre
-                    while [ "$autre" = "y" ]
+                    fonction_yesno "$autre"
+                    autre="$yesno"
+                    while [ "$yesno" = "y" ]
                     do
                         printf "Port : "
                         read port
                         variable+=" $port"
                         printf "Souhaitez vous ajouter un autre port ? (y/N) : "
                         read autre
+                        fonction_yesno "$autre"
+                        autre="$yesno"
                     done
                 else
                     variable="$sauvegarde"
@@ -195,8 +188,10 @@ read choise
             choise=""
             printf "Souhaitez vous entrer un numéro de port ? (y/N) : "
             read choise
+            fonction_yesno "$choise"
+            choise="$yesno"
                 if [ "$choise" = "y" ];then
-                    printf "\nPort : "
+                    printf "Port : "
                     read port
                     variable+=" $port"
                     choise=""
@@ -597,6 +592,8 @@ case $choise in
                     variable+=" -f"
                     printf "\nVoulez-vous spécifier la MTU ? (y/N) : "
                     read choise
+                    fonction_yesno "$choise"
+                    choise="$yesno"
                         if [ $choise = "y" ];then
                             printf "Valeur : "
                             read valeur
