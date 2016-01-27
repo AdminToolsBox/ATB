@@ -5,29 +5,65 @@ user=$(whoami)
 	case "$user" in  
   
 		root)
-			printf "Which language will be used in the manual ?\n" 
-			printf "1 - English \n2 - French - Français\n"			
-			read language 			
-			case "$language" in
-				1|en|english)			
-					tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1
-					printf "The manual was install in English with sucess.\n"
-					exit 0
-				;;
-				
-				2|fr|french|français)
-					tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1
-					printf "Le manuel a bien été installé en Français.\n"
-					exit 0
-				;;
 
-				*)			
-					printf "The language specified isn't correct or available"
-					
-				;;
+DIALOG_CANCEL=1
+DIALOG_ESC=255
+HEIGHT=0
+WIDTH=0
 
-				
-			esac	
+while true; do
+  exec 3>&1
+  selection=$(dialog \
+    --backtitle "Man Page Instalation" \
+    --title "Man Page" \
+    --clear \
+    --cancel-label "Exit" \
+    --menu "Choose the man language :" $HEIGHT $WIDTH 4 \
+    "English" "Man Page in English" \
+    "French" "Page de Man en Français" \
+    2>&1 1>&3)
+  exit_status=$?
+  exec 3>&-
+  case $exit_status in
+    $DIALOG_CANCEL)
+      clear
+      echo "Program terminated."
+      exit
+      ;;
+    $DIALOG_ESC)
+      clear
+      echo "Program aborted." >&2
+      exit 1
+      ;;
+  esac
+  case $selection in
+    0 )
+      clear
+      echo "Program terminated."
+      ;;
+	
+
+English )
+	tar zcvf /usr/share/man/man1/atb.1.gz man/en/atb.1	
+	dialog \
+    --backtitle "Instalation Complete" \
+    --title "Instalation Complete" \
+    --clear \
+    --msgbox "Man Page was successfully instaled in English. \n 
+You can access to it by tapping  : \n man atb" 7 60 \
+      ;;
+
+    French )
+	tar zcvf /usr/share/man/man1/atb.1.gz man/fr/atb.1	
+	dialog \
+    --backtitle "Instalation Terminé" \
+    --title "Instalation Terminé" \
+    --clear \
+    --msgbox "La page de Man en français a été installé avec succès. \n 
+Vous pouvez accèder à cette page en tapant : \n man atb" 7 60 \
+      ;;
+  esac
+done
 		;;
 		*)	
 	
