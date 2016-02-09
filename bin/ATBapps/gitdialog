@@ -44,38 +44,11 @@ while true; do
 	
 
 	Configuration )
-		if [ "git config user.name" != "" ]; then
-			response=$(dialog \
-			--backtitle "Git Configuration" \
-			--title "Git Name already set !" \
-			--clear \
-			--yesno "You already have a git name : \n Do you want to replace it ?" $HEIGHT $WIDTH 4 \
-    			"No" \
-    			"Yes" \
-		 	2>&1 1>&3)
-				 case $response in
-					Yes )
-			      		clear
-			      		echo "Yes"
-			      		;;
-
-					No )
-			      		clear
-			      		echo "Yes"
-			      		;;
-				esac
-				
-
-			
-		else
-			dialog \
-			--backtitle "Git Configuration" \
-			--title "Git Name Configuration !" \
-			--clear \
-			--infobox "Enter your Git Name :" 7 60 \
-		        
-			git config user.name "$nickname"
-		fi
+				dialog \
+		--backtitle "Git Configuration" \
+		--title "Git Configuration" \
+		--clear \
+		--yesno "Coucou" 7 60 \
       	;;
 
 	Initialisation )	
