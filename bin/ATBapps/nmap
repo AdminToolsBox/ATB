@@ -7,7 +7,7 @@ fonction_yesno()
     yesno="$1"
         if [[ "$yesno" = "y" || "$yesno" = "Y" || "$yesno" = "yes" || "$yesno" = "Yes" || "$yesno" = "YES" || "$yesno" = "o" || "$yesno" = "O" || "$yesno" = "oui" || "$yesno" = "Oui" || "$yesno" = "OUI" ]]; then
             yesno="y"
-        elif [[ "$yesno" = "n" || "$yesno" = "N" || "$yesno" = "no" || "$yesno" = "No" || "$yesno" = "NO" || "$yesno" = "non" || "$yesno" = "Non" || "$yesno" = "NON" ]]; then
+        elif [[ "$yesno" = "n" || "$yesno" = "N" || "$yesno" = "no" || "$yesno" = "No" || "$yesno" = "NO" || "$yesno" = "non" || "$yesno" = "Non" || "$yesno" = "NON" || "$yesno" = "" ]]; then
             yesno="n"
         else
             printf "Erreur, entrez (y/N) : "
@@ -25,13 +25,13 @@ read fichier
     if [[ -f $fichier && -n "$fichier" ]];then
         variable+=" $1 $fichier"
     elif [ -z "$fichier" ];then
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
             fi
     else
-        printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
+        printf "Le fichier $fichier n'existe pas, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -55,13 +55,13 @@ read nombre
     if [[ "$(echo $nombre | grep "^[ [:digit:] ]")" && -n "$nombre" ]];then
         variable+=" $1 $nombre"
     elif [ -z "$fichier" ];then
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
         if [ "$touche" != * ];then
             exit
         fi
     else
-        printf "$nombre n'est pas un nombre, appuyez sur une touche pour recommencer...\n"
+        printf "$nombre n'est pas un nombre, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -94,7 +94,7 @@ read hote
                     autre="$yesno"
                 done
     else
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -115,7 +115,7 @@ read hoteport
     if [ -n "$hoteport" ];then
         variable+=" $1 $hoteport"
     else
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -136,7 +136,7 @@ read option
     if [ -n "$(echo $option | grep ^-p)" ];then
         variable+=" $option"
     else
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -178,7 +178,7 @@ read choice
                     done
                 else
                     variable="$sauvegarde"
-                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
                             exit
@@ -200,7 +200,7 @@ read choice
                     variable+=""
                 else
                     variable="$sauvegarde"
-                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
                             exit
@@ -213,7 +213,7 @@ read choice
                     variable+=" $valeur"
                 else
                     variable="$sauvegarde"
-                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
                 read touche
                     if [ "$touche" != * ];then
                         exit
@@ -226,14 +226,14 @@ read choice
                     variable+=" $fichier"
                 elif [ -z "$fichier" ];then
                     variable="$sauvegarde"
-                    printf "Erreur, appuyez sur une touche pour recommencer...\n"
+                    printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
                             exit
                         fi
                 else
                     variable="$sauvegarde"
-                    printf "Le fichier $fichier n'existe pas, appuyez sur une touche pour recommencer...\n"
+                    printf "Le fichier $fichier n'existe pas, appuyez sur la touche entrée pour recommencer...\n"
                     read touche
                         if [ "$touche" != * ];then
                             exit
@@ -243,14 +243,14 @@ read choice
             choice=""
             touche=""
         fi
-    elif [ -z "$choice" ];then
-        printf "Erreur, appuyez sur une touche pour recommencer...\n"
+    elif [[ "$choice" -gt "$#" && -z "$choice" ]];then
+        printf "Erreur, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
             fi
     else
-        printf "Le choix $choice n'existe pas, appuyez sur une touche pour recommencer...\n"
+        printf "Le choix $choice n'existe pas, appuyez sur la touche entrée pour recommencer...\n"
         read touche
             if [ "$touche" != * ];then
                 exit
@@ -729,7 +729,7 @@ case $choice in
     nb_mots="$(echo "$variable" | wc -w | sed 's/^[ \t]*//')"
 
         if [[ "$test" = "nmap" || "$test" = "" ]]; then
-            printf "Erreur, vous n'avez pas renseigné d'option.\nAppuyez sur une touche pour retourner au menu principal...\n"
+            printf "Erreur, vous n'avez pas renseigné d'option.\nAppuyez sur la touche entrée pour retourner au menu principal...\n"
             read touche
                 if [ "$touche" != * ]; then
                     exit
@@ -764,6 +764,18 @@ case $choice in
     printf "q - RETOUR"
     printf "\n\nChoix : "
     read choice
+
+    if [[ -z "$choice" || "$choice" != [1-"$j"] && "$choice" != "q" ]]; then
+        if [ -z "$choice" ]; then
+            printf "Erreur, vous n'avez pas renseigné de choix, appuyez sur la touche entrée pour recommencer...\n"
+        elif [ "$choice" != [1-"$j"] ]; then
+            printf "Le choix $choice n'existe pas, appuyez sur la touche entrée pour recommencer...\n"
+        fi
+            read touche
+                if [ "$touche" != * ];then
+                    exit
+                fi
+    fi
     }
 
     while [ "$choice" != "Q" ]
@@ -789,7 +801,12 @@ case $choice in
     done
     ;;
 
-    q|Q)  choice="" exit 0;;
+    q|Q)  choice=""
+            clear
+            if [ "$variable" != "nmap" ]; then
+                echo "Votre commande à entrer est : $variable"
+            fi
+            exit 0;;
     *)	choice="" menu;;
 esac
 }
