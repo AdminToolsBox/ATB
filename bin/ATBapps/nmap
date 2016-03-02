@@ -351,7 +351,9 @@ menu()
                     1)  choice="" variable+=" -sL";;
                     2)  choice="" variable+=" -sP";;
                     3)  choice="" variable+=" -P0";;
-                    4)  choice="" variable+=" -PN";;
+                    4)  choice=""
+                        entree="Entrez une adresse ou une plage d'adresses IP : "
+                        fonction_ecriture "-PN" "$entree";;
                     5)  choice="" printf "\n1 - -PS [portlist]: Découverte TCP SYN des ports en paramètre\n2 - -PA [portlist]: Découverte TCP ACK des ports en paramètre\n3 - -PU [portlist]: Découverte TCP UDP des ports en paramètre\n"
                         renseigneport="o"
                         fonction_choix "-PS" "-PA" "-PU";;
