@@ -6,25 +6,24 @@
 ## \version 1.0.8
 ## \date January 5th 2016
 
-i18n_display "menu"
 printf "1 - Configuration Git \n2 - Nouveau dépot Github \n"
 read choise
 case $choise in
 
 	1)
-		
+
 ############### User Part ###############
 
 		if [ "$(git config user.name)" != "" ]; then
-		printf "Vous avez déjà défini un nom git : " 
-		git config user.name 		
-		printf "Voulez vous en changez ? [y/N] \n" 
+		printf "Vous avez déjà défini un nom git : "
+		git config user.name
+		printf "Voulez vous en changez ? [y/N] \n"
 		read changeuser
 			case $changeuser in
 			y|Y)
 				printf "Entrez un nouveau pseudo Git :\n"
                 		read nickname
-                		git config user.name "$nickname"
+                		git config --global user.name "$nickname"
   			;;
 			*) 
 				break
@@ -32,14 +31,14 @@ case $choise in
 		else 
 	 	printf "Entrez un pseudo Git :\n"
                 read nickname
-                git config user.name "$nickname"
+                git config --global user.name "$nickname"
 		fi
 
 ############### Email Part ###############
 
 		if [ "$(git config user.email)" != "" ]; then
 		printf "Vous avez déjà défini un email git : " 
-		git config user.email
+		git config --global user.email
 		printf "Voulez vous en changez ? [y/N] \n"
 		read  changeemail
 			case $changeemail in
@@ -73,7 +72,8 @@ case $choise in
 				break
 			esac
 		else
-		printf "Voulez vous définir un proxy pour git ?"
+		printf "Vous n'avez pas défini de Proxy. \nVoulez vous en définir un ? [y/N] \n"
+		read setproxy
 			case $setproxy in
 			y|Y) 
 				printf "Entrez le proxy :\n"
@@ -88,21 +88,21 @@ case $choise in
 		fi
 
 ############### Resume ##############
-
-		printf "Votre nom git est : " 
+		clear
+		printf "\nVotre nom git est : " 
 		git config user.name 
 		printf "Votre email git est : "
 		git config user.email
-		if [ "$(git config --global http.proxy)" != "" ]; then 
+		if [ "$(git config --global http.proxy)" != "" ]; then
 			printf "Votre proxy est : "
 			git config --global http.proxy
 		else
-			printf "Vous n'avez pas défini de proxy" 		
+			printf "Vous n'avez pas défini de proxy. \n\n"
 		fi
 	;;
-		
+
 ############### Git Initialisation ###############
-		
+
 	2)
 		printf "Nom du nouveau dépot git :\n"
 		read name
@@ -113,7 +113,7 @@ case $choise in
 		printf "URL du dépot git :\n"
 		read url
 		git remote add "$name" "$url"
-		printf "Nom de la branche sur laquel vous travaillez :\n"
+		printf "Nom de la branche sur laquel vous travaillez [master] : \n"
 		read branche
 		if [ "$branche" != "" ]; then 
                 branche ="master"
@@ -125,7 +125,7 @@ case $choise in
 		printf "Vos dépots :\n"
 	;;
 	*)
-		printf "Choix Invalide"
+		printf "Choix Invalide\n"
 
 esac
 
