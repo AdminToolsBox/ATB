@@ -5,7 +5,7 @@
 ## \brief Git configuration and setup. 
 ## \version 1.0.8
 ## \date January 5th 2016
-
+clear
 printf "1 - Configuration Git \n2 - Nouveau dépot Github \n"
 read choise
 case $choise in
@@ -115,10 +115,11 @@ case $choise in
 		git remote add "$name" "$url"
 		printf "Nom de la branche sur laquel vous travaillez [master] : \n"
 		read branche
-		if [ "$branche" != "" ]; then 
-                branche ="master"
-                fi
-		git pull "$name" "$branche"
+		if [ "$branche" = "" ]; then 
+                	git pull "$name" master
+                else
+			git pull "$name" "$branche"
+		fi
 	;;
 
 	3)
@@ -128,7 +129,4 @@ case $choise in
 		printf "Choix Invalide\n"
 
 esac
-
-
-
 
