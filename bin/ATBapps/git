@@ -5,12 +5,13 @@
 ## \brief Git configuration and setup. 
 ## \version 1.0.8
 ## \date January 5th 2016
-clear
-printf "1 - Configuration Git \n2 - Nouveau dépot Github \n"
-read choise
+
+function_choise(){
 case $choise in
 
 	1)
+		choise=""
+		clear
 
 ############### User Part ###############
 
@@ -25,8 +26,6 @@ case $choise in
                 		read nickname
                 		git config --global user.name "$nickname"
   			;;
-			*) 
-				break
 			esac
 		else 
 	 	printf "Entrez un pseudo Git :\n"
@@ -47,8 +46,6 @@ case $choise in
 				read email
 				git config --global user.email "$email"
 			;;
-			*)
-				break
 			esac
 		else
 		printf "Entrez une adresse email (compte Github) :\n"
@@ -68,8 +65,6 @@ case $choise in
 				read proxy
 				git config --global http.proxy "$proxy"
 			;;
-			*)
-				break
 			esac
 		else
 		printf "Vous n'avez pas défini de Proxy. \nVoulez vous en définir un ? [y/N] \n"
@@ -82,8 +77,6 @@ case $choise in
 				git config --global http.proxy "$proxy"
 				fi
 			;;
-			*)
-				break
 			esac
 		fi
 
@@ -97,36 +90,62 @@ case $choise in
 			printf "Votre proxy est : "
 			git config --global http.proxy
 		else
-			printf "Vous n'avez pas défini de proxy. \n\n"
+			printf "Vous n'avez pas défini de proxy\n\n"
 		fi
+		echo "\nAppuyez sur une touche pour revenir au menu"
+		read touche
 	;;
 
 ############### Git Initialisation ###############
 
 	2)
+		choise=""
+		clear
+
 		printf "Nom du nouveau dépot git :\n"
 		read name
-		cd ~
-		mkdir "$name"
-		git init "$name"
-		cd "$name"
-		printf "URL du dépot git :\n"
-		read url
-		git remote add "$name" "$url"
-		printf "Nom de la branche sur laquel vous travaillez [master] : \n"
-		read branche
-		if [ "$branche" = "" ]; then 
-                	git pull "$name" master
-                else
-			git pull "$name" "$branche"
+		if [ -z $name ];then
+			echo "Erreur, vous n'avez pas renseigné un nom valide"
+	                read touche
+			function_choise
+		else
+			cd ~
+			mkdir "$name"
+			git init "$name"
+			cd "$name"
+			printf "URL du dépot git :\n"
+			read url
+			git remote add "$name" "$url"
+			printf "Nom de la branche sur laquel vous travaillez [master] : \n"
+			read branche
+			if [ "$branche" = "" ]; then 
+                		git pull "$name" master
+                	else
+				git pull "$name" "$branche"
+			fi
 		fi
 	;;
 
 	3)
 		printf "Vos dépots :\n"
 	;;
-	*)
-		printf "Choix Invalide\n"
+
+	q|Q)
+		exit 0
+	;;
+
+        *)
+                printf "Choix Invalide\n"
+        ;;
 
 esac
 
+}
+
+while [ choise != "q" ]
+do
+	clear
+	printf "1 - Configuration Git \n2 - Nouveau dépot Github \nq - Quitter\n\nChoix : "
+	read choise
+	function_choise
+done
